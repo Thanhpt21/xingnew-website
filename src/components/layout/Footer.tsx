@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  FacebookFilled,
   YoutubeFilled,
+  FacebookFilled,
   EnvironmentOutlined,
   PhoneOutlined,
   MailOutlined,
@@ -20,19 +20,19 @@ export default function Footer({ config }: FooterProps) {
   if (!config) return null;
 
   return (
-    <footer className="bg-[#3f3f3f] text-gray-300 mt-6">
+    <footer className="bg-gray-50 border-t border-gray-200 mt-12">
       {/* ===== MAIN FOOTER CONTENT ===== */}
-      <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-        <div className="flex flex-col md:flex-row gap-8 md:gap-10 lg:gap-12">
+      <div className="max-w-7xl mx-auto px-4 py-10 md:py-14 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
           
           {/* ===== COLUMN 1: LOGO & DESCRIPTION ===== */}
-          <div className="md:w-1/3 lg:w-2/5 space-y-4 md:space-y-6">
+          <div className="space-y-6">
             {config.logo && (
-              <div className="w-48 md:w-60 lg:w-72">
+              <div className="w-56 md:w-64">
                 <Image
                   src={config.logo}
-                  alt={config.name}
-                  width={280}
+                  alt={config.name || "Xing New"}
+                  width={300}
                   height={120}
                   className="object-contain w-full h-auto"
                   priority
@@ -40,194 +40,143 @@ export default function Footer({ config }: FooterProps) {
               </div>
             )}
 
-            <h3 className="font-semibold text-white text-lg md:text-xl">
-              {config.name || "ECO Electronics"}
+            <h3 className="font-bold text-2xl text-gray-900">
+              {config.name || "Xing New"}
             </h3>
 
-            <p className="text-sm md:text-base leading-relaxed">
-              Công Ty TNHH Điện Tử ECO là cửa hàng chuyên cung cấp các sản phẩm
-              phần cứng Điện tử & Robot: Mạch lập trình, Module chức năng,
-              Cảm biến, động cơ, Bánh xe, Khung Robot,...
+            <p className="text-gray-600 leading-relaxed text-base">
+              Công ty TNHH Xing New chuyên phân phối giấy in nhiệt, giấy in mã vạch, băng keo công nghiệp và các vật tư in ấn chất lượng cao, nguồn gốc rõ ràng, giá cả cạnh tranh.
             </p>
 
-            {/* SOCIAL LINKS - Mobile hiển thị ở đây */}
-            <div className="flex flex-col gap-3 pt-4 md:hidden">
-              <Link
-                href={config.youtube || "#"}
-                target="_blank"
-                className="flex items-center justify-center gap-3 bg-white text-black px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition-colors"
-              >
-                <YoutubeFilled className="text-red-600 text-lg" />
-                <span className="font-medium">YouTube</span>
-              </Link>
+            {/* SOCIAL LINKS - Hiển thị cả mobile & desktop */}
+            <div className="flex gap-4 pt-4">
+              {config.youtube && (
+                <Link
+                  href={config.youtube}
+                  target="_blank"
+                  className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-300 transition-all duration-300 group"
+                >
+                  <YoutubeFilled className="text-2xl text-gray-700 group-hover:text-red-600" />
+                </Link>
+              )}
 
-              <Link
-                href={config.facebook || "#"}
-                target="_blank"
-                className="flex items-center justify-center gap-3 bg-[#1877F2] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors"
-              >
-                <FacebookFilled className="text-lg" />
-                <span className="font-medium">Facebook</span>
-              </Link>
+              {config.facebook && (
+                <Link
+                  href={config.facebook}
+                  target="_blank"
+                  className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-300 transition-all duration-300 group"
+                >
+                  <FacebookFilled className="text-2xl text-gray-700 group-hover:text-blue-600" />
+                </Link>
+              )}
             </div>
           </div>
 
           {/* ===== COLUMN 2: CONTACT INFO ===== */}
-          <div className="md:w-1/2 lg:w-2/5 space-y-4 md:space-y-6">
-            <h3 className="font-semibold text-white uppercase text-base md:text-lg mb-2 md:mb-4">
+          <div className="space-y-6">
+            <h3 className="font-bold text-xl text-gray-900 uppercase tracking-wide">
               Thông tin liên hệ
             </h3>
 
-            <div className="space-y-3 md:space-y-4">
-              {/* Địa chỉ */}
+            <div className="space-y-4">
               {(config.showAddress ?? true) && (
-                <div className="flex gap-3 items-start">
-                  <EnvironmentOutlined className="mt-1 flex-shrink-0" />
-                  <span className="text-sm md:text-base">
-                    {config.address ??
-                      "269/20 Lý Thường Kiệt, Phường Phú Thọ, TP.HCM"}
+                <div className="flex items-start gap-4">
+                  <EnvironmentOutlined className="text-gray-600 text-lg mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">
+                    {config.address || "269/20 Lý Thường Kiệt, Phường Phú Thọ, TP. Thủ Dầu Một, Bình Dương"}
                   </span>
                 </div>
               )}
 
-              {/* Email */}
               {(config.showEmail ?? true) && (
-                <div className="flex gap-3 items-center">
-                  <MailOutlined className="flex-shrink-0" />
-                  <span className="text-sm md:text-base break-all">
-                    {config.email ?? "contact.hshopvn@gmail.com"}
-                  </span>
+                <div className="flex items-center gap-4">
+                  <MailOutlined className="text-gray-600 text-lg flex-shrink-0" />
+                  <a href={`mailto:${config.email}`} className="text-gray-700 hover:text-gray-900 transition-colors">
+                    {config.email || "contact@xingnew.vn"}
+                  </a>
                 </div>
               )}
 
-              {/* Hotline */}
               {(config.showMobile ?? true) && (
-                <div className="flex gap-3 items-center">
-                  <PhoneOutlined className="flex-shrink-0" />
-                  <span className="text-sm md:text-base font-medium">
-                    Hotline: {config.mobile ?? "028.6670.4455"}
-                  </span>
+                <div className="flex items-center gap-4">
+                  <PhoneOutlined className="text-gray-600 text-lg flex-shrink-0" />
+                  <a href={`tel:${config.mobile}`} className="text-gray-900 font-semibold hover:text-gray-700 transition-colors">
+                    {config.mobile || "0903 776 456"}
+                  </a>
                 </div>
               )}
 
-              {/* ZALO OA */}
-              <div className="flex gap-3 items-center">
-                <MessageOutlined className="flex-shrink-0" />
-                <span className="text-sm md:text-base">
-                  Zalo OA: <strong>Hshopvn</strong> – Điện tử và Robot
+              <div className="flex items-center gap-4">
+                <MessageOutlined className="text-gray-600 text-lg flex-shrink-0" />
+                <span className="text-gray-700">
+                  Zalo OA: <strong className="text-gray-900">XingNew</strong>
                 </span>
               </div>
 
-              {/* ZALO Bán hàng */}
-              <div className="flex gap-3 items-center">
-                <CustomerServiceOutlined className="flex-shrink-0" />
-                <span className="text-sm md:text-base">
-                  Zalo Bán Hàng: <strong>0938.022.500</strong> – <strong>0934.022.500</strong>
-                </span>
-              </div>
-
-              {/* ZALO Kỹ thuật */}
-              <div className="flex gap-3 items-center">
-                <CustomerServiceOutlined className="flex-shrink-0" />
-                <span className="text-sm md:text-base">
-                  Zalo Kỹ Thuật: <strong>0968.022.500</strong> (nhắn tin)
-                </span>
-              </div>
-
-              {/* Lưu ý */}
-              <div className="pt-3 md:pt-4 border-t border-gray-600">
-                <p className="text-xs md:text-sm text-gray-400 italic">
-                  Xin Quý Khách ưu tiên nhắn tin qua Zalo/Facebook giúp Hshop
-                  có thời gian tra cứu và trả lời chính xác.
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-sm text-gray-500 italic">
+                  Ưu tiên liên hệ qua Zalo/Facebook để được hỗ trợ nhanh nhất.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* ===== COLUMN 3: SOCIAL LINKS - Desktop ===== */}
-          <div className="hidden md:flex flex-col gap-4 lg:gap-6 items-start md:w-1/3 lg:w-1/5">
-            <Link
-              href={config.youtube || "#"}
-              target="_blank"
-              className="flex items-center gap-3 bg-white text-black px-5 py-3 rounded-lg shadow hover:bg-gray-100 transition-colors w-full justify-center md:justify-start"
-            >
-              <YoutubeFilled className="text-red-600 text-xl" />
-              <span className="font-medium">YouTube</span>
-            </Link>
+          {/* ===== COLUMN 3: QUICK LINKS & INFO ===== */}
+          <div className="space-y-6">
+            <h3 className="font-bold text-xl text-gray-900 uppercase tracking-wide">
+              Liên kết nhanh
+            </h3>
 
-            <Link
-              href={config.facebook || "#"}
-              target="_blank"
-              className="flex items-center gap-3 bg-[#1877F2] text-white px-5 py-3 rounded-lg shadow hover:bg-blue-700 transition-colors w-full justify-center md:justify-start"
-            >
-              <FacebookFilled className="text-xl" />
-              <span className="font-medium">Facebook</span>
-            </Link>
+            <div className="grid grid-cols-2 gap-4">
+              <Link href="/san-pham" className="text-gray-700 hover:text-gray-900 transition-colors">
+                Sản phẩm
+              </Link>
+              <Link href="/tin-tuc" className="text-gray-700 hover:text-gray-900 transition-colors">
+                Tin tức
+              </Link>
+              <Link href="/gioi-thieu" className="text-gray-700 hover:text-gray-900 transition-colors">
+                Giới thiệu
+              </Link>
+              <Link href="/lien-he" className="text-gray-700 hover:text-gray-900 transition-colors">
+                Liên hệ
+              </Link>
+              <Link href="/chinh-sach-doi-tra" className="text-gray-700 hover:text-gray-900 transition-colors">
+                Chính sách đổi trả
+              </Link>
+              <Link href="/chinh-sach-bao-mat" className="text-gray-700 hover:text-gray-900 transition-colors">
+                Bảo mật thông tin
+              </Link>
+            </div>
 
-            {/* Quick Links */}
-            <div className="pt-4 md:pt-6">
-              <h4 className="font-semibold text-white mb-3">Liên kết nhanh</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/san-pham" className="text-gray-300 hover:text-white text-sm">
-                    Sản phẩm
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/tin-tuc" className="text-gray-300 hover:text-white text-sm">
-                    Tin tức
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/lien-he" className="text-gray-300 hover:text-white text-sm">
-                    Liên hệ
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/chinh-sach-bao-mat" className="text-gray-300 hover:text-white text-sm">
-                    Chính sách bảo mật
-                  </Link>
-                </li>
-              </ul>
+            <div className="pt-6 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                <strong className="text-gray-900">Giờ làm việc:</strong> Thứ 2 - Thứ 7: 8:00 - 17:30
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                Chủ nhật & Lễ: Nghỉ
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       {/* ===== BOTTOM BAR ===== */}
-      <div className="border-t border-gray-700 py-6">
+      <div className="border-t border-gray-200 bg-gray-100 py-6">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-center md:text-left">
-              <p className="text-sm text-gray-400">
-                © {new Date().getFullYear()} {config.name || "ECO Electronics"}. All rights reserved.
-              </p>
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-              <Link 
-                href="/dieu-khoan-dich-vu" 
-                className="text-gray-400 hover:text-white text-sm"
-              >
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+            <p>
+              © {new Date().getFullYear()} {config.name || "Xing New"}. Tất cả quyền được bảo lưu.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-6">
+              <Link href="/dieu-khoan-dich-vu" className="hover:text-gray-900 transition-colors">
                 Điều khoản dịch vụ
               </Link>
-              <Link 
-                href="/chinh-sach-bao-mat" 
-                className="text-gray-400 hover:text-white text-sm"
-              >
+              <Link href="/chinh-sach-bao-mat" className="hover:text-gray-900 transition-colors">
                 Chính sách bảo mật
               </Link>
-              <Link 
-                href="/chinh-sach-doi-tra" 
-                className="text-gray-400 hover:text-white text-sm"
-              >
+              <Link href="/chinh-sach-doi-tra" className="hover:text-gray-900 transition-colors">
                 Chính sách đổi trả
-              </Link>
-              <Link 
-                href="/lien-he" 
-                className="text-gray-400 hover:text-white text-sm"
-              >
-                Liên hệ
               </Link>
             </div>
           </div>

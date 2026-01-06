@@ -14,8 +14,10 @@ export default function Page() {
   return (
     <main className="flex flex-col bg-gray-50">
       <Banner />
-      <HomeFeatures />
       <HomeCategorySections />
+      <HomeFeatures />
+      <ProductList />
+      <BlogHome />
     </main>
   )
 }

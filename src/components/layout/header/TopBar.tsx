@@ -43,7 +43,6 @@ const TopBar = ({
   const { currentUser } = useAuth();
   const [showMobileSearch, setShowMobileSearch] = useState(false);
 
-  // ================= USER DROPDOWN MENU =================
   const userMenuItems: MenuProps["items"] = currentUser
     ? [
         {
@@ -66,7 +65,7 @@ const TopBar = ({
         {
           key: "logout",
           label: (
-            <button onClick={onLogout} className="text-red-600">
+            <button onClick={onLogout} className="text-gray-700">
               {isLogoutPending ? (
                 <Spin indicator={<LoadingOutlined />} size="small" />
               ) : (
@@ -86,10 +85,10 @@ const TopBar = ({
       ];
 
   return (
-    <div className="border-b bg-white">
+    <div className="border-b border-gray-200 bg-white will-change-transform">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-14 md:h-16 lg:h-20 gap-3">
-          {/* ================= MOBILE HAMBURGER MENU ================= */}
+          {/* MOBILE HAMBURGER MENU */}
           <button
             className="lg:hidden flex-shrink-0"
             onClick={onOpenMobileMenu}
@@ -98,7 +97,7 @@ const TopBar = ({
             <MenuOutlined className="text-lg sm:text-xl text-gray-700" />
           </button>
 
-          {/* ================= LOGO ================= */}
+          {/* LOGO */}
           <Link href="/" className="flex items-center flex-shrink-0">
             <Image
               src={getImageUrl(config?.logo) || "/images/logo.png"}
@@ -112,12 +111,12 @@ const TopBar = ({
             />
           </Link>
 
-          {/* ================= SEARCH BAR (Desktop) ================= */}
+          {/* SEARCH BAR (Desktop) */}
           <div className="flex-1 max-w-xl hidden md:block">
             <SearchBar />
           </div>
 
-          {/* ================= MOBILE SEARCH TOGGLE ================= */}
+          {/* MOBILE SEARCH TOGGLE */}
           <button
             className="md:hidden flex-shrink-0"
             onClick={() => setShowMobileSearch(!showMobileSearch)}
@@ -126,9 +125,9 @@ const TopBar = ({
             <SearchOutlined className="text-lg sm:text-xl text-gray-700" />
           </button>
 
-          {/* ================= RIGHT ACTIONS ================= */}
+          {/* RIGHT ACTIONS */}
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-5">
-            {/* USER - Hiển thị trên tablet/desktop */}
+            {/* USER - Desktop/Tablet */}
             <div className="hidden md:block">
               <Dropdown
                 menu={{ items: userMenuItems }}
@@ -151,11 +150,11 @@ const TopBar = ({
                         icon={<UserOutlined />}
                         className={`flex-shrink-0 ${
                           currentUser 
-                            ? "!bg-blue-600 !text-white" 
+                            ? "!bg-gray-800 !text-white" 
                             : "bg-gray-200 text-gray-600"
                         }`}
                       />
-                      <span className="text-sm text-gray-700 truncate max-w-[80px] lg:max-w-[100px] group-hover:text-blue-600 transition-colors">
+                      <span className="text-sm text-gray-700 truncate max-w-[80px] lg:max-w-[100px] group-hover:text-gray-900 transition-colors">
                         {currentUser?.name?.split(" ").pop() || "Tài khoản"}
                       </span>
                     </>
@@ -164,7 +163,7 @@ const TopBar = ({
               </Dropdown>
             </div>
 
-            {/* USER - Mobile chỉ hiển thị icon */}
+            {/* USER - Mobile */}
             <div className="md:hidden">
               <Dropdown
                 menu={{ items: userMenuItems }}
@@ -174,8 +173,8 @@ const TopBar = ({
                 <button className="p-1">
                   {currentUser ? (
                     <div className="relative">
-                      <div className="absolute inset-0 bg-blue-600 rounded-full opacity-20"></div>
-                      <UserOutlined className="text-lg sm:text-xl text-blue-600 relative" />
+                      <div className="absolute inset-0 bg-gray-800 rounded-full opacity-20"></div>
+                      <UserOutlined className="text-lg sm:text-xl text-gray-700 relative" />
                     </div>
                   ) : (
                     <UserOutlined className="text-lg sm:text-xl text-gray-700" />
@@ -189,8 +188,8 @@ const TopBar = ({
               href="/gio-hang"
               className="relative flex items-center gap-1 flex-shrink-0 group"
             >
-              <ShoppingCartOutlined className="text-lg sm:text-xl text-[#0B3A8F] group-hover:text-blue-600 transition-colors" />
-              <span className="text-xs sm:text-sm hidden md:inline group-hover:text-blue-600 transition-colors">
+              <ShoppingCartOutlined className="text-lg sm:text-xl text-gray-700 group-hover:text-gray-900 transition-colors" />
+              <span className="text-xs sm:text-sm hidden md:inline group-hover:text-gray-900 transition-colors">
                 Giỏ hàng
               </span>
               {cartItemCount > 0 && (
@@ -202,22 +201,22 @@ const TopBar = ({
               )}
             </Link>
 
-            {/* TABLET MENU BUTTON (chỉ hiển thị trên tablet) */}
+            {/* TABLET MENU BUTTON */}
             {onOpenTabletMenu && (
               <button
                 className="hidden md:block lg:hidden"
                 onClick={onOpenTabletMenu}
                 aria-label="Tablet menu"
               >
-                <MenuOutlined className="text-xl" />
+                <MenuOutlined className="text-xl text-gray-700" />
               </button>
             )}
           </div>
         </div>
 
-        {/* ================= MOBILE SEARCH BAR ================= */}
+        {/* MOBILE SEARCH BAR */}
         {showMobileSearch && (
-          <div className="md:hidden py-3 border-t">
+          <div className="md:hidden py-3 border-t border-gray-200">
             <SearchBar />
             <button
               onClick={() => setShowMobileSearch(false)}

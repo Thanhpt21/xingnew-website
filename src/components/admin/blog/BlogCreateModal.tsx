@@ -24,6 +24,25 @@ export const BlogCreateModal = ({ open, onClose, refetch }: BlogCreateModalProps
   const [contentItems, setContentItems] = useState<ContentItem[]>([{ title: '', body: '' }])
   const [fileList, setFileList] = useState<UploadFile[]>([])
 
+  // Hàm chuyển tiếng Việt có dấu → không dấu và sinh slug chuẩn
+  const generateSlug = (title: string): string => {
+    return title
+      .normalize('NFD') // Chuyển dấu về dạng riêng
+      .replace(/[\u0300-\u036f]/g, '') // Xóa dấu
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Xóa ký tự đặc biệt
+      .replace(/\s+/g, '-') // Thay khoảng trắng bằng gạch ngang
+      .replace(/-+/g, '-') // Gộp nhiều gạch ngang thành một
+  }
+
+  // Tự động sinh slug khi Title thay đổi
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const title = e.target.value
+    const slug = generateSlug(title)
+    form.setFieldsValue({ slug })
+  }
+
   const handleAddContentItem = () => setContentItems([...contentItems, { title: '', body: '' }])
   const handleRemoveContentItem = (index: number) => setContentItems(contentItems.filter((_, i) => i !== index))
   const handleContentItemChange = (index: number, name: 'title' | 'body', value: string) => {
@@ -38,8 +57,8 @@ export const BlogCreateModal = ({ open, onClose, refetch }: BlogCreateModalProps
     try {
       const formData = new FormData()
       formData.append('title', values.title)
-      formData.append('slug', values.slug)
-      formData.append('description', values.description)
+      formData.append('slug', values.slug || generateSlug(values.title)) // Dự phòng nếu slug rỗng
+      formData.append('description', values.description || '')
       if (fileList[0]?.originFileObj) formData.append('thumb', fileList[0].originFileObj)
       formData.append('isPublished', values.isPublished ? 'true' : 'false')
       formData.append('content', JSON.stringify(contentItems))
@@ -56,95 +75,136 @@ export const BlogCreateModal = ({ open, onClose, refetch }: BlogCreateModalProps
     }
   }
 
+  // Reset form khi đóng modal
   useEffect(() => {
     if (!open) {
       form.resetFields()
       setFileList([])
       setContentItems([{ title: '', body: '' }])
     }
-  }, [open])
+  }, [open, form])
 
   return (
     <Modal
-      title="Tạo Blog"
-      visible={open}
+      title="Tạo Blog Mới"
+      open={open}
       onCancel={onClose}
       footer={null}
-      width={800}
+      width={900}
       destroyOnClose
+      className="top-10"
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
         {/* Thumbnail */}
-        <Form.Item label="Ảnh thumbnail">
+        <Form.Item label="Ảnh thumbnail (khuyến nghị 1200x630)">
           <Upload
-            listType="picture"
+            listType="picture-card"
             fileList={fileList}
             onChange={handleFileChange}
-            beforeUpload={() => false}
+            beforeUpload={() => false} // Ngăn upload tự động
             maxCount={1}
             accept="image/*"
           >
-            <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+            {fileList.length === 0 && (
+              <div>
+                <UploadOutlined />
+                <div className="mt-2 text-xs">Tải lên</div>
+              </div>
+            )}
           </Upload>
         </Form.Item>
 
         {/* Tiêu đề */}
-        <Form.Item label="Tiêu đề" name="title" rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}>
-          <Input />
-        </Form.Item>
         <Form.Item
-          label="Slug"
+          label="Tiêu đề bài viết"
+          name="title"
+          rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}
+        >
+          <Input
+            placeholder="Nhập tiêu đề bài viết..."
+            onChange={handleTitleChange} // Tự động sinh slug
+            size="large"
+          />
+        </Form.Item>
+
+        {/* Slug - tự động sinh + cho phép chỉnh thủ công */}
+        <Form.Item
+          label="Slug (URL thân thiện)"
           name="slug"
           rules={[
             { required: true, message: 'Vui lòng nhập slug' },
             { pattern: /^[a-z0-9-]+$/, message: 'Slug chỉ chứa chữ thường, số và dấu gạch ngang' },
           ]}
         >
-          <Input placeholder="ví dụ: tin-tuc-moi" />
+          <Input placeholder="tự-động-sinh-khi-nhập-tiêu-đề" size="large" />
         </Form.Item>
 
-        {/* Mô tả */}
-        <Form.Item label="Mô tả" name="description">
-          <Input.TextArea rows={3} />
+        {/* Mô tả ngắn */}
+        <Form.Item label="Mô tả ngắn (SEO)" name="description">
+          <Input.TextArea rows={3} placeholder="Mô tả ngắn gọn về bài viết (tối ưu SEO)" />
         </Form.Item>
 
-        {/* Dynamic content */}
-        <Form.Item label="Nội dung">
-          {contentItems.map((item, index) => (
-            <div key={index} style={{ marginBottom: 24, border: '1px solid #f0f0f0', padding: 16, borderRadius: 6 }}>
-              <h3>Phần tử #{index + 1}</h3>
-              <Form.Item label="Tiêu đề phần tử">
-                <Input value={item.title} onChange={(e) => handleContentItemChange(index, 'title', e.target.value)} />
-              </Form.Item>
-              <Form.Item label="Nội dung">
-                <div style={{ border: '1px solid #d9d9d9', borderRadius: 4 }}>
+        {/* Nội dung động */}
+        <Form.Item label="Nội dung bài viết">
+          <div className="space-y-6">
+            {contentItems.map((item, index) => (
+              <div
+                key={index}
+                className="border border-gray-200 rounded-lg p-6 bg-gray-50/50 relative"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-medium text-gray-800">Phần nội dung #{index + 1}</h4>
+                  {contentItems.length > 1 && (
+                    <Button
+                      danger
+                      size="small"
+                      onClick={() => handleRemoveContentItem(index)}
+                    >
+                      Xóa phần này
+                    </Button>
+                  )}
+                </div>
+
+                <Form.Item label="Tiêu đề phần">
+                  <Input
+                    value={item.title}
+                    onChange={(e) => handleContentItemChange(index, 'title', e.target.value)}
+                    placeholder="Tiêu đề phần nội dung"
+                  />
+                </Form.Item>
+
+                <Form.Item label="Nội dung chi tiết">
                   <DynamicRichTextEditor
                     value={item.body}
                     onChange={(value) => handleContentItemChange(index, 'body', value)}
-                    height={300}
+                    height={350}
                   />
-                </div>
-              </Form.Item>
-              {contentItems.length > 1 && (
-                <Button danger onClick={() => handleRemoveContentItem(index)}>
-                  Xóa phần tử này
-                </Button>
-              )}
-            </div>
-          ))}
-          <Button type="dashed" onClick={handleAddContentItem} block>
-            Thêm phần tử nội dung
-          </Button>
+                </Form.Item>
+              </div>
+            ))}
+
+            <Button type="dashed" onClick={handleAddContentItem} block size="large">
+              + Thêm phần nội dung mới
+            </Button>
+          </div>
         </Form.Item>
 
         {/* Trạng thái xuất bản */}
-        <Form.Item label="Xuất bản" name="isPublished" valuePropName="checked" initialValue={false}>
+        <Form.Item label="Xuất bản ngay" name="isPublished" valuePropName="checked" initialValue={false}>
           <Switch />
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={isPending} block>
-            Tạo mới
+        {/* Nút submit */}
+        <Form.Item className="mb-0">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isPending}
+            block
+            size="large"
+            className="bg-gray-800 hover:bg-gray-900"
+          >
+            {isPending ? 'Đang tạo...' : 'Tạo bài viết mới'}
           </Button>
         </Form.Item>
       </Form>

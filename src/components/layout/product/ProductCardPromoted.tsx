@@ -1,12 +1,13 @@
 "use client";
 
-import { Image, Rate } from "antd";
+import { Image } from "antd";
 import Link from "next/link";
 import { getImageUrl } from "@/utils/getImageUrl";
 import { Product } from "@/types/product.type";
 import { formatVND } from "@/utils/helpers";
 import { Flame, Gift } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Star, Heart, Eye } from "lucide-react";
 
 interface ProductCardPromotedProps {
   product: Product;
@@ -22,11 +23,12 @@ export default function ProductCardPromoted({
   showBuyButton = true,
 }: ProductCardPromotedProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   
   // Memoized calculations for better performance
   const { thumbUrl, originalPrice, discountedPrice, promoText, avgRating, productUrl } = useMemo(() => {
     const thumbUrl = getImageUrl(p.thumb ?? null);
-    const originalPrice = p.basePrice;
+    const originalPrice = p.basePrice || 0;
     
     // Tính giá sau khuyến mãi
     const getDiscountedPrice = () => {
@@ -68,136 +70,218 @@ export default function ProductCardPromoted({
     return { thumbUrl, originalPrice, discountedPrice, promoText, avgRating, productUrl };
   }, [p]);
 
-  // Determine promotion type and styling
-  const promotionInfo = useMemo(() => {
+  // Rating calculation
+  const ratingInfo = useMemo(() => {
+    const avgRating = p.totalReviews > 0 ? p.totalRatings / p.totalReviews : 0;
+    const formattedRating = avgRating > 0 ? Math.round(avgRating * 10) / 10 : 0;
+    return {
+      avgRating: formattedRating,
+      totalReviews: p.totalReviews,
+      hasRating: p.totalReviews > 0
+    };
+  }, [p.totalReviews, p.totalRatings]);
+
+  // Calculate discount
+  const { discountPercentage, hasDiscount } = useMemo(() => {
     const promo = p.promotionProducts?.[0];
-    if (!promo) return null;
+    const basePrice = p.basePrice || 0;
+    let discountPercentage = 0;
+    let hasDiscount = false;
 
-    const hasGift = promo.giftProductId && (promo.giftQuantity ?? 0) > 0;
-    const hasDiscount = promo.discountType === "PERCENT" || promo.discountType === "FIXED";
-    
-    // Priority: Gift > Discount > Other
-    if (hasGift) {
-      return {
-        type: "gift",
-        text: `Tặng ${promo.giftQuantity}`,
-        bgColor: "bg-gradient-to-r from-emerald-500 to-teal-600",
-        icon: <Gift className="w-3.5 h-3.5" />,
-        discountPercent: null
-      };
-    } 
-    
-    if (hasDiscount) {
-      const discountPercent = promo.discountType === "PERCENT" 
-        ? promo.discountValue 
-        : Math.round((promo.discountValue / originalPrice) * 100);
-      
-      return {
-        type: "discount",
-        text: promo.discountType === "PERCENT" 
-          ? `-${promo.discountValue}%` 
-          : `-${formatVND(promo.discountValue)}`,
-        bgColor: "bg-gradient-to-r from-orange-500 to-red-500",
-        icon: <Flame className="w-3.5 h-3.5" />,
-        discountPercent
-      };
+    if (promo && basePrice > 0) {
+      if (promo.discountType === "PERCENT") {
+        discountPercentage = promo.discountValue;
+        hasDiscount = true;
+      } else if (promo.discountType === "FIXED") {
+        discountPercentage = Math.round((promo.discountValue / basePrice) * 100);
+        hasDiscount = true;
+      }
     }
-    
-    return null;
-  }, [p.promotionProducts, originalPrice]);
 
-  const hasDiscount = useMemo(() => {
-    return discountedPrice < originalPrice;
-  }, [discountedPrice, originalPrice]);
+    return { discountPercentage, hasDiscount };
+  }, [p.promotionProducts, p.basePrice]);
 
   return (
-    <Link href={productUrl} className="group block h-full">
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 hover:border-orange-300 relative">
-        {/* Image container */}
-        <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 aspect-[4/5] overflow-hidden">
-          {/* Single promotion badge (top-right corner) */}
-          {promotionInfo && (
-            <div className="absolute top-3 right-3 z-20">
-              <div
-                className={`flex items-center gap-1.5 text-white text-[11px] sm:text-xs font-bold px-2.5 py-1.5 rounded-full shadow-lg backdrop-blur-sm ${promotionInfo.bgColor}`}
-              >
-                {promotionInfo.icon}
-                <span className="font-semibold">
-                  {promotionInfo.text}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Show discount percentage only if it's a discount promotion AND not already shown in badge */}
-          {hasDiscount && promotionInfo?.type !== "discount" && (
-            <div className="absolute top-3 left-3 z-20">
-              <div className="flex items-center justify-center bg-gradient-to-br from-orange-500 to-red-600 text-white text-xs font-bold px-2 py-1.5 rounded-full shadow-lg min-w-[40px]">
-                {Math.round((1 - discountedPrice / originalPrice) * 100)}%
-              </div>
-            </div>
-          )}
-
-          {/* Image loading state */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse" />
-          )}
-
-          {/* Shimmer effect on hover */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 z-10 pointer-events-none" />
-
-          {/* Product image */}
-          <div className="w-full h-full flex items-center justify-center p-4 sm:p-6 relative">
+    <div 
+      className="group relative h-full"
+      style={{ 
+        animation: `fadeInUp 0.5s ease-out ${index * 30}ms both`,
+      }}
+    >
+      {/* Card chính - không có transform khi hover */}
+      <div className="relative h-full bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 flex flex-col">
+        
+        {/* Image Container */}
+        <Link href={`/san-pham/${p.slug || p.id}`} className="block relative">
+          <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 aspect-square overflow-hidden">
+            
+            {/* Loading skeleton */}
+            {!imageLoaded && (
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse" />
+            )}
+            
+            {/* Image - chỉ zoom nhẹ khi hover */}
             <Image
               src={thumbUrl || "/images/no-image.png"}
               alt={p.name}
               preview={false}
               loading="lazy"
-              width={400}
-              height={500}
+              width={280}
+              height={280}
               onLoad={() => setImageLoaded(true)}
-              className={`w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 ${
+              className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
-              wrapperClassName="w-full h-full"
               placeholder={
-                <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                  <div className="w-8 h-8 border-3 border-gray-200 border-t-orange-500 rounded-full animate-spin" />
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="w-8 h-8 border-3 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
                 </div>
               }
             />
+
+            {/* Overlay nhẹ khi hover */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-300" />
+
+            {/* Badges - top-left */}
+            <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-10">
+              {hasDiscount && discountPercentage > 0 && (
+                <div className="bg-gradient-to-r from-gray-700 to-gray-600 text-white text-xs font-bold px-2 py-1 rounded">
+                  -{discountPercentage}%
+                </div>
+              )}
+              {p.promotionProducts?.[0]?.giftProductId && 
+               (p.promotionProducts[0].giftQuantity ?? 0) > 0 && (
+                <div className="bg-gradient-to-r from-slate-600 to-slate-500 text-white text-xs font-bold px-2 py-1 rounded">
+                  🎁 Quà tặng
+                </div>
+              )}
+            </div>
+
+            {/* Quick Actions - top-right */}
+            <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsWishlisted(!isWishlisted);
+                }}
+                className={`p-2 rounded-full transition-all duration-300 ${
+                  isWishlisted 
+                    ? 'bg-gray-700 text-white' 
+                    : 'bg-white/90 backdrop-blur-sm text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Heart size={16} className={isWishlisted ? 'fill-current' : ''} />
+              </button>
+              <Link href={`/san-pham/${p.slug || p.id}`}>
+                <button
+                  className="p-2 bg-white/90 backdrop-blur-sm text-gray-700 rounded-full hover:bg-gray-200 transition-all duration-300"
+                  title="Xem chi tiết sản phẩm"
+                >
+                  <Eye size={16} />
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
+        </Link>
 
-        {/* Product info */}
-        <div className="p-3 sm:p-4 flex flex-col flex-grow">
-          {/* Product name */}
-          <h3 className="text-gray-900 font-semibold text-sm sm:text-base mb-2 line-clamp-2 min-h-[3rem] leading-tight group-hover:text-orange-600 transition-colors duration-300">
-            {p.name}
-          </h3>
+        {/* Product Info */}
+        <div className="flex flex-col flex-grow p-3">
+          {/* Product Name */}
+          <Link href={`/san-pham/${p.slug || p.id}`}>
+            <h3 className="font-medium text-gray-800 text-sm leading-snug line-clamp-2 min-h-[2.5rem] hover:text-gray-600 transition-colors duration-200 mb-2">
+              {p.name}
+            </h3>
+          </Link>
 
-    
-
-          {/* Price section */}
-          <div className="mt-auto pt-2 border-t border-gray-100">
-            <div className="flex items-center flex-wrap gap-2">
-              <span className="text-orange-600 font-bold text-base sm:text-lg whitespace-nowrap">
-                LIÊN HỆ
-              </span>
-              
-              {/* {showOriginalPrice && hasDiscount && (
-                <span className="text-gray-400 line-through text-sm whitespace-nowrap">
-                  {formatVND(originalPrice)}
+          {/* Rating */}
+          <div className="mb-2">
+            {ratingInfo.hasRating ? (
+              <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={12}
+                      className={`${
+                        i < Math.floor(ratingInfo.avgRating)
+                          ? 'fill-gray-500 text-gray-500'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-600">
+                  {ratingInfo.avgRating.toFixed(1)}
                 </span>
-              )} */}
+                <span className="text-xs text-gray-400">
+                  ({ratingInfo.totalReviews})
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={12} className="text-gray-300" />
+                ))}
+                <span className="text-xs text-gray-400 ml-1">(0)</span>
+              </div>
+            )}
+          </div>
+
+          {/* Price Section */}
+          <div className="mt-auto pt-2 border-t border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-gray-800 font-bold text-lg">
+                    LIÊN HỆ
+                  </span>
+                </div>
+                {showOriginalPrice && hasDiscount && originalPrice > 0 && (
+                  <span className="text-gray-400 line-through text-xs">
+                    {formatVND(originalPrice)}
+                  </span>
+                )}
+              </div>
+              
+              {p.totalReviews > 10 && (
+                <span className="text-xs text-gray-500">
+                  Đã bán {p.totalReviews * 3}
+                </span>
+              )}
             </div>
             
-
+            {/* Stock Information */}
+            <div className="text-xs text-gray-600">
+              {p.stock && p.stock > 0 ? (
+                <span>Hàng còn: {p.stock}</span>
+              ) : (
+                <span className="text-red-500">Hết hàng</span>
+              )}
+            </div>
           </div>
-
-         
         </div>
+
+        {/* Freeship badge */}
+        {hasDiscount && (
+          <div className="mt-2 bg-gradient-to-r from-gray-700 to-gray-600 text-white text-xs font-medium py-1.5 text-center">
+            ⚡ Freeship đơn từ 0đ
+          </div>
+        )}
       </div>
-    </Link>
+
+      {/* CSS Animation */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </div>
   );
 }

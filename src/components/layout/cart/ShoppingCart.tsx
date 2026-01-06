@@ -131,7 +131,7 @@ const ShoppingCart = () => {
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-600 mx-auto"></div>
       </div>
     );
   }
@@ -142,20 +142,20 @@ const ShoppingCart = () => {
       <div className="min-h-screen py-8">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="mb-6">
-            <Link href="/" className="flex items-center gap-1 text-gray-600 hover:text-blue-600 transition-colors">
+            <Link href="/" className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors">
               <HomeOutlined />
               <span>Trang chủ</span>
             </Link>
           </div>
 
-          <Card className="border">
+          <Card className="border border-gray-200">
             <Empty
               description={
                 <div className="py-8">
                   <p className="text-lg font-medium text-gray-700 mb-2">Giỏ hàng trống</p>
                   <p className="text-gray-500 mb-6">Hãy thêm sản phẩm vào giỏ hàng</p>
                   <Link href="/san-pham">
-                    <Button type="primary" icon={<ShoppingCartOutlined />}>
+                    <Button type="primary" icon={<ShoppingCartOutlined />} className="bg-gray-800 hover:bg-gray-900 border-none">
                       Tiếp tục mua sắm
                     </Button>
                   </Link>
@@ -217,7 +217,6 @@ const ShoppingCart = () => {
                   {attributes}
                 </div>
               )}
-            
             </div>
           </div>
         );
@@ -230,7 +229,7 @@ const ShoppingCart = () => {
       render: (_: any, record: CartItem) => {
         const finalPrice = getFinalPrice(record);
         return (
-          <span className="font-medium text-blue-600">{formatVND(finalPrice)}</span>
+          <span className="font-medium text-gray-800">{formatVND(finalPrice)}</span>
         );
       },
     },
@@ -245,18 +244,20 @@ const ShoppingCart = () => {
             icon={<MinusOutlined />}
             disabled={record.quantity <= 1}
             onClick={() => onChangeQuantity(record.quantity - 1, record)}
+            className="border border-gray-300"
           />
           <InputNumber
             min={1}
             value={record.quantity}
             onChange={(v) => typeof v === 'number' && onChangeQuantity(v, record)}
-            className="w-14 text-center"
+            className="w-14 text-center border border-gray-300"
             controls={false}
           />
           <Button
             size="small"
             icon={<PlusOutlined />}
             onClick={() => onChangeQuantity(record.quantity + 1, record)}
+            className="border border-gray-300"
           />
         </div>
       ),
@@ -269,7 +270,7 @@ const ShoppingCart = () => {
         const finalPrice = getFinalPrice(record);
         const total = finalPrice * record.quantity;
         return (
-          <span className="font-medium text-blue-600">{formatVND(total)}</span>
+          <span className="font-medium text-gray-800">{formatVND(total)}</span>
         );
       },
     },
@@ -291,23 +292,24 @@ const ShoppingCart = () => {
 
   return (
     <div className="py-6">
-            {/* Breadcrumb */}
+      {/* Breadcrumb */}
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto pb-6 px-4">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-blue-600 hover:text-blue-700 font-medium">
+            <a href="/" className="text-gray-600 hover:text-gray-900 font-medium">
               Trang chủ
             </a>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-600">Giỏ hàng</span>
+            <span className="text-gray-900">Giỏ hàng</span>
           </div>
         </div>
       </div>
+      
       <div className="container mx-auto max-w-7xl px-4">
         {/* Header */}
         <div className="my-2">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold">Giỏ hàng của bạn</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Giỏ hàng của bạn</h1>
             <Button 
               danger 
               onClick={handleClearCart}
@@ -339,7 +341,7 @@ const ShoppingCart = () => {
             dataSource={items.slice(0, 10)}
             columns={columns}
             pagination={false}
-            className="border"
+            className="border border-gray-200"
           />
         </div>
 
@@ -351,7 +353,7 @@ const ShoppingCart = () => {
               onChange={(e) => handleSelectAllChange(e.target.checked)}
               disabled={items.length > 10}
             />
-            <span className="text-sm font-medium">Chọn tất cả</span>
+            <span className="text-sm font-medium text-gray-700">Chọn tất cả</span>
             {items.length > 10 && (
               <span className="text-xs text-yellow-600 ml-auto">(Tối đa 10)</span>
             )}
@@ -364,7 +366,7 @@ const ShoppingCart = () => {
             const attributes = renderAttributes(getAttributes(item));
             
             return (
-              <Card key={item.id} className="border">
+              <Card key={item.id} className="border border-gray-200">
                 <div className="flex gap-3">
                   <Checkbox
                     checked={selectedItems.has(item.id)}
@@ -397,17 +399,17 @@ const ShoppingCart = () => {
                     
                     <div className="flex items-center gap-1 mb-2">
                       {!item.variant && (
-                        <Tag color="blue" className="text-xs">Sản phẩm đơn giản</Tag>
+                        <Tag color="default" className="text-xs bg-gray-100 text-gray-600">Sản phẩm đơn giản</Tag>
                       )}
                       {item.id < 0 && (
-                        <Tag color="orange" className="text-xs">Tạm thời</Tag>
+                        <Tag color="default" className="text-xs bg-yellow-100 text-yellow-800">Tạm thời</Tag>
                       )}
                     </div>
                     
                     <div className="space-y-1 text-sm mb-3">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Giá:</span>
-                        <span className="font-medium text-blue-600">{formatVND(finalPrice)}</span>
+                        <span className="font-medium text-gray-800">{formatVND(finalPrice)}</span>
                       </div>
                     </div>
                     
@@ -418,12 +420,13 @@ const ShoppingCart = () => {
                           icon={<MinusOutlined />}
                           disabled={item.quantity <= 1}
                           onClick={() => onChangeQuantity(item.quantity - 1, item)}
+                          className="border border-gray-300"
                         />
                         <InputNumber
                           min={1}
                           value={item.quantity}
                           onChange={(v) => typeof v === 'number' && onChangeQuantity(v, item)}
-                          className="w-10 text-center"
+                          className="w-10 text-center border border-gray-300"
                           size="small"
                           controls={false}
                         />
@@ -431,6 +434,7 @@ const ShoppingCart = () => {
                           size="small"
                           icon={<PlusOutlined />}
                           onClick={() => onChangeQuantity(item.quantity + 1, item)}
+                          className="border border-gray-300"
                         />
                       </div>
                       
@@ -443,9 +447,9 @@ const ShoppingCart = () => {
                       />
                     </div>
                     
-                    <div className="mt-3 pt-3 border-t flex justify-between items-center">
+                    <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center">
                       <span className="text-gray-600">Tổng:</span>
-                      <span className="text-blue-600 font-bold">
+                      <span className="text-gray-900 font-bold">
                         {formatVND(finalPrice * item.quantity)}
                       </span>
                     </div>
@@ -458,13 +462,13 @@ const ShoppingCart = () => {
 
         {/* Summary */}
         <div className="mt-6">
-          <div className="bg-white border p-4">
+          <div className="bg-white border border-gray-200 p-4">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
               <div className="text-sm text-gray-600">
-                Đã chọn: <span className="font-medium">{selectedItems.size}</span> sản phẩm
+                Đã chọn: <span className="font-medium text-gray-900">{selectedItems.size}</span> sản phẩm
               </div>
               <div className="flex flex-col md:flex-row md:items-center gap-4">
-                <div className="text-xl font-bold text-blue-600">
+                <div className="text-xl font-bold text-gray-900">
                   Tổng: {formatVND(getSelectedTotal())}
                 </div>
                 <Button
@@ -472,7 +476,7 @@ const ShoppingCart = () => {
                   size="large"
                   onClick={handleCheckoutClick}
                   disabled={selectedItems.size === 0}
-                  className="w-full md:w-auto"
+                  className="w-full md:w-auto bg-gray-800 hover:bg-gray-900 border-none"
                 >
                   {currentUser ? 'Đặt hàng' : 'Thanh toán'} ({selectedItems.size})
                 </Button>
@@ -491,6 +495,7 @@ const ShoppingCart = () => {
         okText="Đăng nhập"
         cancelText="Hủy"
         centered
+        okButtonProps={{ className: 'bg-gray-800 hover:bg-gray-900 border-none' }}
       >
         <div className="py-4">
           <p className="text-gray-600 mb-3">Bạn cần đăng nhập để tiến hành thanh toán.</p>

@@ -34,7 +34,7 @@ const EyeIcon = () => (
 function BlogLoading() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb Skeleton */}
         <div className="mb-8">
           <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
@@ -53,7 +53,7 @@ function BlogLoading() {
             </div>
 
             {/* Featured Image Skeleton */}
-            <div className="w-full h-64 sm:h-80 bg-gray-200 rounded-xl mb-8 animate-pulse" />
+            <div className="w-full h-64 sm:h-80 bg-gray-200 rounded-lg mb-8 animate-pulse" />
 
             {/* Content Skeleton */}
             <div className="space-y-4">
@@ -165,7 +165,7 @@ function RelatedBlogs({ currentSlug }: { currentSlug: string }) {
           className="group block"
         >
           <div className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
-            <div className="relative w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+            <div className="relative w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200">
               <OptimizedImage
                 alt={blog.title}
                 src={getImageUrl(blog.thumb ?? "") || "/images/no-image.png"}
@@ -175,7 +175,7 @@ function RelatedBlogs({ currentSlug }: { currentSlug: string }) {
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+              <h3 className="text-sm font-medium text-gray-800 line-clamp-2 group-hover:text-gray-900 transition-colors">
                 {blog.title}
               </h3>
               <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
@@ -223,8 +223,8 @@ function BlogContent({ slug }: { slug: string }) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-center px-4">
         <div className="max-w-md text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
@@ -235,7 +235,7 @@ function BlogContent({ slug }: { slug: string }) {
             Bài viết này không tồn tại hoặc chưa được công bố.
           </p>
           <Link href="/tin-tuc">
-            <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+            <button className="px-6 py-3 bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-900 transition-colors duration-200">
               Quay lại tin tức
             </button>
           </Link>
@@ -259,14 +259,14 @@ function BlogContent({ slug }: { slug: string }) {
   })();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="mb-8">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Link
               href="/"
-              className="flex items-center gap-2 hover:text-blue-600 transition-colors"
+              className="flex items-center gap-2 hover:text-gray-900 transition-colors"
             >
               <HomeIcon />
               <span>Trang chủ</span>
@@ -274,12 +274,12 @@ function BlogContent({ slug }: { slug: string }) {
             <span className="text-gray-400">/</span>
             <Link
               href="/tin-tuc"
-              className="hover:text-blue-600 transition-colors"
+              className="hover:text-gray-900 transition-colors"
             >
               Tin tức
             </Link>
             <span className="text-gray-400">/</span>
-            <span className="text-blue-600 font-medium truncate">
+            <span className="text-gray-900 font-medium truncate">
               {blog.title}
             </span>
           </div>
@@ -318,7 +318,7 @@ function BlogContent({ slug }: { slug: string }) {
 
             {/* Featured Image */}
             {blog.thumb && (
-              <div className="relative w-full aspect-video mb-8 rounded-xl overflow-hidden">
+              <div className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden border border-gray-200">
                 <OptimizedImage
                   src={getImageUrl(blog.thumb) || "/images/no-image.png"}
                   alt={blog.title}
@@ -334,7 +334,7 @@ function BlogContent({ slug }: { slug: string }) {
             {blog.description && (
               <div className="mb-8">
                 <div className="relative pl-4">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-full"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-gray-400 rounded-full"></div>
                   <p className="text-lg text-gray-700 leading-relaxed italic">
                     {blog.description}
                   </p>
@@ -383,7 +383,7 @@ function BlogContent({ slug }: { slug: string }) {
                 <h2 className="text-xl font-bold text-gray-900">
                   Bài viết liên quan
                 </h2>
-                <div className="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-2"></div>
+                <div className="w-12 h-1 bg-gray-400 rounded-full mt-2"></div>
               </div>
               
               <Suspense fallback={
@@ -403,16 +403,16 @@ function BlogContent({ slug }: { slug: string }) {
               </Suspense>
 
               {/* Newsletter CTA */}
-              <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+              <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 className="font-semibold text-gray-900 mb-2">Nhận tin mới nhất</h3>
                 <p className="text-sm text-gray-600 mb-4">Đăng ký để không bỏ lỡ bài viết mới</p>
                 <div className="space-y-3">
                   <input
                     type="email"
                     placeholder="Email của bạn"
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                   />
-                  <button className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                  <button className="w-full px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors duration-200">
                     Đăng ký ngay
                   </button>
                 </div>
@@ -426,7 +426,7 @@ function BlogContent({ slug }: { slug: string }) {
         .blog-content {
           font-size: 16px;
           line-height: 1.8;
-          color: #374151;
+          color: #4b5563;
         }
 
         @media (min-width: 768px) {
@@ -440,7 +440,7 @@ function BlogContent({ slug }: { slug: string }) {
         .blog-content h2,
         .blog-content h3,
         .blog-content h4 {
-          font-weight: 700;
+          font-weight: 600;
           color: #111827;
           margin-top: 2rem;
           margin-bottom: 1rem;
@@ -459,7 +459,7 @@ function BlogContent({ slug }: { slug: string }) {
           top: 0.25rem;
           bottom: 0.25rem;
           width: 3px;
-          background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+          background: #9ca3af;
           border-radius: 2px;
         }
 
@@ -475,12 +475,13 @@ function BlogContent({ slug }: { slug: string }) {
         }
 
         .blog-content img {
-          border-radius: 0.75rem;
+          border-radius: 0.5rem;
           margin: 1.5rem auto;
           max-width: 100%;
           height: auto;
           display: block;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          border: 1px solid #e5e7eb;
+          background: #f9fafb;
         }
 
         @media (min-width: 768px) {
@@ -491,7 +492,7 @@ function BlogContent({ slug }: { slug: string }) {
         }
 
         .blog-content a {
-          color: #2563eb;
+          color: #374151;
           text-decoration: none;
           border-bottom: 1px solid transparent;
           transition: all 0.2s;
@@ -499,8 +500,8 @@ function BlogContent({ slug }: { slug: string }) {
         }
 
         .blog-content a:hover {
-          color: #1d4ed8;
-          border-bottom-color: #2563eb;
+          color: #111827;
+          border-bottom-color: #9ca3af;
         }
 
         .blog-content ul,
@@ -516,7 +517,7 @@ function BlogContent({ slug }: { slug: string }) {
 
         .blog-content ul li::before {
           content: '•';
-          color: #3b82f6;
+          color: #6b7280;
           font-weight: bold;
           display: inline-block;
           width: 1em;
@@ -533,8 +534,8 @@ function BlogContent({ slug }: { slug: string }) {
 
         .blog-content ol li::before {
           content: counter(list-counter) '.';
-          color: #3b82f6;
-          font-weight: 600;
+          color: #6b7280;
+          font-weight: 500;
           position: absolute;
           left: -1.5em;
         }
@@ -553,25 +554,28 @@ function BlogContent({ slug }: { slug: string }) {
           padding: 0.2rem 0.4rem;
           border-radius: 0.375rem;
           font-size: 0.875em;
-          color: #dc2626;
+          color: #374151;
           font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', monospace;
+          border: 1px solid #e5e7eb;
         }
 
         .blog-content pre {
-          background: #1f2937;
-          color: #f9fafb;
+          background: #f9fafb;
+          color: #374151;
           padding: 1rem;
           border-radius: 0.5rem;
           overflow-x: auto;
           margin: 2rem 0;
           font-size: 0.875em;
           line-height: 1.5;
+          border: 1px solid #e5e7eb;
         }
 
         .blog-content pre code {
           background: transparent;
           color: inherit;
           padding: 0;
+          border: none;
         }
 
         .blog-content table {
@@ -579,7 +583,7 @@ function BlogContent({ slug }: { slug: string }) {
           border-collapse: collapse;
           margin: 2rem 0;
           font-size: 0.875em;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          border: 1px solid #e5e7eb;
           border-radius: 0.5rem;
           overflow: hidden;
         }
@@ -593,7 +597,7 @@ function BlogContent({ slug }: { slug: string }) {
 
         .blog-content th {
           background: #f9fafb;
-          font-weight: 600;
+          font-weight: 500;
           color: #111827;
         }
 
@@ -621,7 +625,7 @@ function BlogContent({ slug }: { slug: string }) {
 
         /* Selection color */
         .blog-content ::selection {
-          background-color: rgba(59, 130, 246, 0.2);
+          background-color: rgba(156, 163, 175, 0.2);
         }
 
         /* Smooth scrolling for anchor links */

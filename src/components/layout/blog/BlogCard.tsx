@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Image } from 'antd';
-import { CalendarOutlined, ArrowRightOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ArrowRightOutlined, EyeOutlined } from '@ant-design/icons';
 
 import { Blog } from '@/types/blog.type';
 import { getImageUrl } from '@/utils/getImageUrl';
@@ -17,40 +17,47 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
 
   return (
     <Link href={`/tin-tuc/${blog.slug}`} className="block group">
-      <div className="relative h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100">
-        {/* Image Container with Overlay */}
-        <div className="relative h-64 overflow-hidden bg-gray-100">
+      <div className="relative h-full bg-white rounded-xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300">
+        {/* Image Container */}
+        <div className="relative h-56 overflow-hidden bg-gray-100">
           <Image
             src={imageSrc}
             alt={blog.title}
             preview={false}
-            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
             fallback="/images/no-image.png"
           />
           
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
           {/* Date Badge */}
-          <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
+          <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
             <div className="flex items-center gap-2">
-              <CalendarOutlined className="text-blue-600" />
-              <span className="text-sm font-semibold text-gray-900">
+              <CalendarOutlined className="text-gray-600" />
+              <span className="text-xs font-medium text-gray-800">
                 {new Date(blog.createdAt).toLocaleDateString('vi-VN', {
                   day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
+                  month: 'short',
                 })}
               </span>
             </div>
           </div>
 
+          {/* View Count */}
+          {blog.numberViews && blog.numberViews > 0 && (
+            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
+              <div className="flex items-center gap-2">
+                <EyeOutlined className="text-gray-600" />
+                <span className="text-xs font-medium text-gray-800">
+                  {blog.numberViews.toLocaleString()}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-4">
           {/* Title */}
-          <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
+          <h3 className="text-base font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-800 transition-colors duration-200">
             {blog.title}
           </h3>
 
@@ -60,22 +67,21 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
           </p>
 
           {/* Footer */}
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-            {/* Category Badge (Optional - if you have category data) */}
-            <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">
-              Tin tức
-            </span>
+          <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+            {/* Read Time (Optional) */}
+            <div className="flex items-center gap-2 text-gray-500 text-xs">
+              <span className="bg-gray-100 px-2 py-1 rounded">
+                Tin tức
+              </span>
+            </div>
 
             {/* Read More Button */}
-            <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-3 transition-all duration-300">
-              <span className="text-sm">Đọc thêm</span>
-              <ArrowRightOutlined className="transform group-hover:translate-x-1 transition-transform duration-300" />
+            <div className="flex items-center gap-1 text-gray-600 text-sm font-medium group-hover:text-gray-900 transition-colors duration-200">
+              <span className="text-xs">Xem chi tiết</span>
+              <ArrowRightOutlined className="text-xs" />
             </div>
           </div>
         </div>
-
-        {/* Animated Border Effect */}
-        <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-blue-500 transition-all duration-500 pointer-events-none"></div>
       </div>
     </Link>
   );

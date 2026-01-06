@@ -16,69 +16,77 @@ const features = [
   {
     icon: <SafetyCertificateOutlined />,
     title: "Sản phẩm chất lượng",
-    desc: "Nguồn gốc rõ ràng",
+    desc: "Nguồn gốc rõ ràng – chính hãng",
   },
   {
     icon: <CreditCardOutlined />,
     title: "Thanh toán linh hoạt",
-    desc: "COD, chuyển khoản",
+    desc: "COD, chuyển khoản, thẻ",
   },
   {
     icon: <CustomerServiceOutlined />,
-    title: "Hỗ trợ kỹ thuật",
-    desc: "Tư vấn 24/7",
+    title: "Hỗ trợ tận tâm",
+    desc: "Tư vấn miễn phí 24/7",
   },
 ];
 
 export default function HomeFeatures() {
   return (
-    <section className="px-4 py-6 md:py-8">
-      <div className="max-w-7xl mx-auto">
-        {/* CHỈ GIỮ LẠI MỘT LAYOUT DUY NHẤT - XÓA ALTERNATIVE LAYOUT */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+    <section className="w-full bg-white py-8 md:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {features.map((f, i) => (
             <div
               key={i}
               className={`
-                flex items-center gap-3 sm:gap-4
-                border border-blue-600 rounded-lg sm:rounded-xl
-                p-3 sm:p-4
+                group
+                flex flex-col items-center text-center
+                p-5 sm:p-6
                 bg-white
-                hover:shadow-md hover:shadow-blue-100
-                transition-all duration-300
-                hover:scale-[1.02] active:scale-[0.98]
+                border border-gray-200
+                rounded-2xl
+                shadow-sm
+                hover:shadow-xl hover:shadow-gray-200/50
+                hover:border-gray-300
+                transition-all duration-500 ease-out
+                hover:-translate-y-2
               `}
             >
-              {/* Icon */}
+              {/* Icon Container */}
               <div
                 className="
-                  text-blue-700 
-                  text-2xl sm:text-3xl
-                  flex-shrink-0
-                  w-10 h-10 sm:w-12 sm:h-12
+                  mb-4
+                  w-14 h-14 sm:w-16 sm:h-16
                   flex items-center justify-center
-                  bg-blue-50
+                  bg-gray-100
                   rounded-full
+                  text-gray-700
+                  text-2xl sm:text-3xl
+                  group-hover:bg-gray-200
+                  group-hover:text-gray-900
+                  group-hover:scale-110
+                  transition-all duration-500
                 "
               >
                 {f.icon}
               </div>
 
-              {/* Text Content */}
-              <div className="flex-1 min-w-0">
-                <p className="
-                  font-semibold 
-                  text-sm sm:text-base
-                  text-gray-800
-                  mb-1
-                  line-clamp-1
+              {/* Title & Description */}
+              <div className="space-y-2">
+                <h3 className="
+                  font-bold
+                  text-base sm:text-lg
+                  text-gray-900
+                  group-hover:text-gray-950
+                  transition-colors duration-300
                 ">
                   {f.title}
-                </p>
+                </h3>
                 <p className="
-                  text-xs sm:text-sm
-                  text-gray-500
-                  line-clamp-1
+                  text-sm sm:text-base
+                  text-gray-600
+                  leading-relaxed
+                  px-2
                 ">
                   {f.desc}
                 </p>
@@ -86,9 +94,6 @@ export default function HomeFeatures() {
             </div>
           ))}
         </div>
-
-        {/* XÓA HOÀN TOÀN PHẦN ALTERNATIVE LAYOUT */}
-        {/* <div className="block sm:hidden mt-4">...</div> */}
       </div>
     </section>
   );

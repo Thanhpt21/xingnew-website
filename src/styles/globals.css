@@ -5,6 +5,24 @@
 
 @import 'antd/dist/antd.css';
 
+/* Set lighter font weight globally */
+html {
+  font-weight: 300;
+}
+
+body {
+  font-weight: 300;
+  @apply text-gray-900;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+}
+
+strong, b {
+  font-weight: 600;
+}
+
 /* app/globals.css */
 .category-tree .ant-tree-node-content-wrapper {
   width: 100%;

@@ -113,7 +113,7 @@ export default function ContactPage() {
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-blue-600 hover:text-blue-700 font-medium">
+            <a href="/" className="text-gray-600 hover:text-gray-900 font-medium">
               Trang chủ
             </a>
             <span className="text-gray-400">/</span>
@@ -152,7 +152,7 @@ export default function ContactPage() {
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Nguyễn Văn A"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none"
                 />
               </div>
 
@@ -167,7 +167,7 @@ export default function ContactPage() {
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="example@gmail.com"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none"
                 />
               </div>
 
@@ -182,7 +182,7 @@ export default function ContactPage() {
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="090 123 4567"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none"
                 />
               </div>
 
@@ -197,7 +197,7 @@ export default function ContactPage() {
                   onChange={(e) => handleInputChange('message', e.target.value)}
                   placeholder="Nhập nội dung bạn muốn liên hệ..."
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-gray-400 focus:ring-1 focus:ring-gray-400 outline-none resize-none"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={createContactMutation.isPending}
-                className="w-full px-6 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-6 py-4 bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {createContactMutation.isPending ? 'Đang gửi...' : 'Gửi liên hệ'}
               </button>
@@ -222,8 +222,8 @@ export default function ContactPage() {
                   {/* Company Name */}
                   {config.name && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
                       </div>
@@ -237,8 +237,8 @@ export default function ContactPage() {
                   {/* Address */}
                   {config.showAddress && config.address && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
                       </div>
@@ -252,8 +252,8 @@ export default function ContactPage() {
                   {/* Phone */}
                   {config.showMobile && config.mobile && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                       </div>
@@ -267,8 +267,8 @@ export default function ContactPage() {
                   {/* Email */}
                   {config.showEmail && config.email && (
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
                       </div>
@@ -292,7 +292,7 @@ export default function ContactPage() {
                       href={config.facebook}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100"
+                      className="flex items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
                     >
                       <span className="text-sm font-medium text-gray-700">Facebook</span>
                     </a>
@@ -302,7 +302,7 @@ export default function ContactPage() {
                       href={config.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center p-3 bg-pink-50 rounded-lg hover:bg-pink-100"
+                      className="flex items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
                     >
                       <span className="text-sm font-medium text-gray-700">Instagram</span>
                     </a>
@@ -312,7 +312,7 @@ export default function ContactPage() {
                       href={config.youtube}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center p-3 bg-red-50 rounded-lg hover:bg-red-100"
+                      className="flex items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
                     >
                       <span className="text-sm font-medium text-gray-700">YouTube</span>
                     </a>
@@ -322,7 +322,7 @@ export default function ContactPage() {
                       href={config.x}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center p-3 bg-sky-50 rounded-lg hover:bg-sky-100"
+                      className="flex items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
                     >
                       <span className="text-sm font-medium text-gray-700">Twitter</span>
                     </a>
@@ -332,7 +332,7 @@ export default function ContactPage() {
                       href={config.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100"
+                      className="flex items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
                     >
                       <span className="text-sm font-medium text-gray-700">LinkedIn</span>
                     </a>
@@ -342,7 +342,7 @@ export default function ContactPage() {
                       href={`https://zalo.me/${config.zalo}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100"
+                      className="flex items-center justify-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
                     >
                       <span className="text-sm font-medium text-gray-700">Zalo</span>
                     </a>

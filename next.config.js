@@ -8,6 +8,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
       },
+      // Placeholder images
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
     ],
   },
   assetPrefix: '/',

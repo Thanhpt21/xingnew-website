@@ -1,6 +1,6 @@
 'use client';
 
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -22,23 +22,29 @@ const SearchBar = () => {
     }
   };
 
+  const handleClear = () => {
+    setSearchValue('');
+    router.push('/san-pham');
+  };
+
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-md mx-auto">
       <div className="
         flex items-center
         bg-white
         border border-gray-300
         rounded-full
         px-4
-        h-12
+        h-11
         shadow-sm
-        transition
-        focus-within:border-indigo-500
-        focus-within:ring-2
-        focus-within:ring-indigo-200
+        hover:shadow
+        transition-all duration-200
+        focus-within:border-gray-500
+        focus-within:ring-4
+        focus-within:ring-gray-200/30
       ">
         {/* ICON SEARCH */}
-        <SearchOutlined className="text-indigo-600 text-lg mr-3" />
+        <SearchOutlined className="text-gray-500 text-lg flex-shrink-0" />
 
         {/* INPUT */}
         <input
@@ -46,56 +52,59 @@ const SearchBar = () => {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder="Tìm kiếm giấy in nhiệt, băng keo, mã vạch..."
           className="
             flex-1
             bg-transparent
             outline-none
             text-sm
             text-gray-800
-            placeholder-gray-400
+            placeholder-gray-500
+            px-3
           "
         />
 
-        {/* CLEAR */}
+        {/* CLEAR BUTTON - chỉ hiện khi có nội dung */}
         {searchValue && (
           <button
-            onClick={() => {
-              setSearchValue('');
-              router.push('/san-pham');
-            }}
+            onClick={handleClear}
             className="
-              mr-2
-              w-5 h-5
-              flex items-center justify-center
+              flex-shrink-0
+              p-1.5
               rounded-full
               bg-gray-200
               text-gray-600
-              text-xs
-              hover:bg-indigo-500 hover:text-white
-              transition
+              hover:bg-gray-300
+              hover:text-gray-800
+              transition-all duration-150
             "
+            aria-label="Xóa tìm kiếm"
           >
-            ✕
+            <CloseOutlined className="text-xs" />
           </button>
         )}
 
-        {/* BUTTON SEARCH */}
+        {/* SEARCH BUTTON - nhỏ gọn, tone xám bạc */}
         <button
           onClick={handleSearch}
           className="
-            h-9
+            flex-shrink-0
+            ml-2
             px-5
+            h-9
             rounded-full
-            bg-indigo-600
+            bg-gray-800
             text-white
             font-medium
-            flex items-center gap-2
-            hover:bg-indigo-700
-            transition
+            text-sm
+            hover:bg-gray-900
+            active:bg-gray-700
+            transition-all duration-200
+            flex items-center justify-center
           "
+          aria-label="Tìm kiếm"
         >
-          <SearchOutlined />
+          Tìm
         </button>
       </div>
     </div>
