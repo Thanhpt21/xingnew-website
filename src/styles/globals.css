@@ -1,0 +1,21 @@
+/* src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'antd/dist/antd.css';
+
+/* app/globals.css */
+.category-tree .ant-tree-node-content-wrapper {
+  width: 100%;
+}
+
+.category-tree .ant-tree-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-tree .ant-tree-title {
+  flex: 1;
+}
