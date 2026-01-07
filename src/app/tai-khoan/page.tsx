@@ -7,12 +7,11 @@ import AccountSidebar from '@/components/layout/account/AccountSidebar';
 import PersonalInfo from '@/components/layout/account/PersonalInfo';
 import PurchaseHistory from '@/components/layout/account/PurchaseHistory';
 import AddressShipping from '@/components/layout/account/AddressShipping';
-import PcbOrders from '@/components/layout/account/PcbOrders';
 import { useAuth } from '@/context/AuthContext';
 import { HomeOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
-type AccountMenuKey = 'personal' | 'address' | 'history' | 'pcb-orders';
+type AccountMenuKey = 'personal' | 'address' | 'history';
 
 const AccountPage = () => {
   const router = useRouter();
@@ -25,7 +24,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     const paramMenu = (searchParams.get('p') as AccountMenuKey);
-    if (['personal', 'address', 'history', 'pcb-orders'].includes(paramMenu)) {
+    if (['personal', 'address', 'history'].includes(paramMenu)) {
       setSelectedMenu(paramMenu);
     } else {
       setSelectedMenu('personal');
@@ -84,7 +83,6 @@ const AccountPage = () => {
               <span className="text-blue-600 font-medium">
                 {selectedMenu === 'address' && 'Địa chỉ giao hàng'}
                 {selectedMenu === 'history' && 'Lịch sử mua hàng'}
-                {selectedMenu === 'pcb-orders' && 'Đơn hàng PCB'}
               </span>
             </>
           )}
@@ -144,7 +142,6 @@ const AccountPage = () => {
                 {selectedMenu === 'personal' && <PersonalInfo />}
                 {selectedMenu === 'address' && <AddressShipping userId={userId} />}
                 {selectedMenu === 'history' && <PurchaseHistory />}
-                {selectedMenu === 'pcb-orders' && <PcbOrders userId={userId} />}
               </div>
             </div>
           </div>

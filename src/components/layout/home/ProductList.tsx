@@ -76,7 +76,7 @@ export default function FeaturedProductsSection() {
   if (isLoading) {
     return (
       <section className="py-12 md:py-16 lg:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
               Sản phẩm
@@ -99,7 +99,7 @@ export default function FeaturedProductsSection() {
 
   return (
     <section className="py-12 md:py-16 lg:py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Tiêu đề hiện đại, tối giản */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

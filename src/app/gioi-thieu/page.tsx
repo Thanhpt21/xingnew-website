@@ -41,7 +41,6 @@ const SkeletonTimelineItem = () => (
   </div>
 );
 
-// DỮ LIỆU LỊCH SỬ PHÁT TRIỂN (đã dịch và tối ưu)
 const developmentTimeline = [
   {
     year: "2008",
@@ -120,7 +119,7 @@ export default function CompanyHistoryPage() {
     return (
       <div className="min-h-screen bg-white">
         <div className="border-b border-gray-200">
-          <div className="max-w-[1400px] mx-auto px-4 py-4">
+          <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center gap-2">
               <div className="h-4 bg-gray-200 rounded w-20 animate-pulse" />
               <div className="h-4 bg-gray-200 rounded w-4 animate-pulse" />
@@ -128,7 +127,7 @@ export default function CompanyHistoryPage() {
             </div>
           </div>
         </div>
-        <div className="max-w-[1400px] mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <div className="h-10 bg-gray-200 rounded mb-4 w-48 mx-auto animate-pulse" />
             <div className="h-6 bg-gray-200 rounded mb-8 w-64 mx-auto animate-pulse" />
@@ -162,19 +161,19 @@ export default function CompanyHistoryPage() {
         transition={{ duration: 0.5 }}
         className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
       >
-        <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 py-4">
+        <div className="max-w-7xl mx-auto py-4">
           <div className="flex items-center gap-2 text-sm">
             <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
               Trang chủ
             </Link>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-800 font-semibold">Lịch sử phát triển</span>
+            <span className="text-gray-800 font-semibold">Giới thiệu</span>
           </div>
         </div>
       </motion.div>
 
       {/* Main Content */}
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto md:px-6 lg:px-8 py-8 md:py-12">
         {/* Timeline Section */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -277,7 +276,7 @@ export default function CompanyHistoryPage() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center py-16 bg-gray-50 rounded-3xl border border-gray-200"
+          className="text-center py-16"
         >
           <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             Sẵn sàng hợp tác cùng Xing New?
@@ -303,15 +302,7 @@ export default function CompanyHistoryPage() {
           </div>
         </motion.div>
 
-        {/* Footer Note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-16 text-center text-gray-500 text-sm"
-        >
-          <p>© {new Date().getFullYear()} Công ty TNHH Xing New. Tất cả quyền được bảo lưu.</p>
-        </motion.div>
+        
       </div>
     </div>
   );

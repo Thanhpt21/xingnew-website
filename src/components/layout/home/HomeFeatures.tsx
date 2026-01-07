@@ -33,7 +33,7 @@ const features = [
 export default function HomeFeatures() {
   return (
     <section className="w-full bg-white py-8 md:py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {features.map((f, i) => (
             <div

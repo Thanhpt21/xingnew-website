@@ -108,6 +108,11 @@ export const CategoryThreeLevelMenu = ({
   };
 
   const handleCategoryClick = (categoryId: number) => {
+    // Clear any pending timeouts immediately
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+    }
+    
     const params = new URLSearchParams();
     params.set('categoryId', categoryId.toString());
     params.delete('search');
@@ -116,11 +121,12 @@ export const CategoryThreeLevelMenu = ({
     params.delete('isFeatured');
     params.delete('page');
     
-    router.push(`/san-pham?${params.toString()}`);
-    
-    // Đóng menu và reset state
+    // Reset state immediately to hide dropdown
     setHoveredLevel1(null);
     setSelectedLevel2(null);
+    
+    // Then navigate
+    router.push(`/san-pham?${params.toString()}`);
     
     if (onItemClick) {
       onItemClick();
@@ -193,11 +199,7 @@ export const CategoryThreeLevelMenu = ({
         {!hoveredLevel1 ? (
           // Trạng thái mặc định
           <div className="flex items-center justify-center h-full text-gray-400">
-            <div className="text-center px-8">
-              <div className="text-4xl mb-3">🏷️</div>
-              <p className="text-sm font-medium mb-1">Chọn danh mục sản phẩm</p>
-              <p className="text-xs">Di chuột qua danh mục bên trái để xem chi tiết</p>
-            </div>
+           
           </div>
         ) : !selectedLevel2 ? (
           // Hiển thị menu cấp 2

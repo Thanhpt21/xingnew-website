@@ -110,7 +110,7 @@ export default function BlogHome() {
 
   return (
     <section className="w-full bg-white py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-5 lg:px-6 xl:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 md:mb-10 lg:mb-12">
           <div className="mb-4 sm:mb-0">

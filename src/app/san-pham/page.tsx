@@ -672,7 +672,7 @@ export default function ProductsPage() {
         totalPages={totalPages}
       />
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 md:py-6">
+      <div className="max-w-7xl mx-auto py-8">
         {/* MOBILE FILTER TOGGLE BUTTON */}
         <div className="lg:hidden mb-4">
           <button

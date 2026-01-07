@@ -45,14 +45,14 @@ const fakeCategories = [
 
 export default function HomeCategorySections() {
   return (
-    <section className="relative py-24 md:py-32 lg:py-40 bg-[#fafaf8] overflow-hidden">
+    <section className="relative py-24 px-4 md:py-32 lg:py-40 bg-[#fafaf8] overflow-hidden">
       {/* Minimalist background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
         <div className="absolute top-20 right-0 w-[400px] h-[400px] bg-gradient-radial from-gray-200/40 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-0 w-[500px] h-[500px] bg-gradient-radial from-gray-200/40 to-transparent rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div className="relative max-w-7xl mx-auto">
         {/* Section intro */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

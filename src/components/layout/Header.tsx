@@ -21,8 +21,6 @@ const Header = ({ config }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isTabletMenuOpen, setIsTabletMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const marqueeRef = useRef<HTMLDivElement>(null);
-  const [marqueeHeight, setMarqueeHeight] = useState(0);
 
   const cartItems = useCartStore((s) => s.items);
   const cartItemCount = cartItems.reduce((t, i) => t + i.quantity, 0);
@@ -31,13 +29,6 @@ const Header = ({ config }: HeaderProps) => {
   const isAdmin = currentUser?.role === "admin";
 
   useEffect(() => setMounted(true), []);
-
-  // Đo chiều cao của marquee
-  useEffect(() => {
-    if (marqueeRef.current) {
-      setMarqueeHeight(marqueeRef.current.scrollHeight);
-    }
-  }, []);
 
   // Theo dõi scroll
   useEffect(() => {
@@ -117,42 +108,35 @@ const Header = ({ config }: HeaderProps) => {
     <>
       {/* STICKY HEADER */}
       <div className="sticky top-0 z-40 bg-white shadow-sm">
-        {/* Container cho marquee với smooth height transition */}
+        {/* Marquee container - smooth collapse */}
         <div 
           className="overflow-hidden transition-all duration-300 ease-out"
-          style={{ height: scrolled ? '0px' : `${marqueeHeight}px` }}
+          style={{ 
+            maxHeight: scrolled ? '0px' : '200px',
+          }}
         >
-          {/* MARQUEE - trượt lên khi scroll */}
-          <div 
-            ref={marqueeRef}
-            className="transition-transform duration-300 ease-out will-change-transform"
-            style={{
-              transform: scrolled ? `translateY(-${marqueeHeight}px)` : 'translateY(0)',
-            }}
-          >
-            {/* MARQUEE Desktop */}
-            <div className="hidden md:block bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-gray-700 py-2 overflow-hidden border-b border-gray-300">
-              <div className="animate-marquee whitespace-nowrap inline-block">
-                {marqueeMessages.map((msg, index) => (
-                  <span key={index} className="mx-12 text-sm font-medium inline-block">
-                    {msg}
-                    {index < marqueeMessages.length - 1 && <span className="mx-12 text-gray-400">···</span>}
-                  </span>
-                ))}
-                {marqueeMessages.map((msg, index) => (
-                  <span key={`dup-${index}`} className="mx-12 text-sm font-medium inline-block">
-                    {msg}
-                    {index < marqueeMessages.length - 1 && <span className="mx-12 text-gray-400">···</span>}
-                  </span>
-                ))}
-              </div>
+          {/* MARQUEE Desktop */}
+          <div className="hidden md:block bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-gray-700 py-2 overflow-hidden border-b border-gray-300">
+            <div className="animate-marquee whitespace-nowrap inline-block">
+              {marqueeMessages.map((msg, index) => (
+                <span key={index} className="mx-12 text-sm font-medium inline-block">
+                  {msg}
+                  {index < marqueeMessages.length - 1 && <span className="mx-12 text-gray-400">···</span>}
+                </span>
+              ))}
+              {marqueeMessages.map((msg, index) => (
+                <span key={`dup-${index}`} className="mx-12 text-sm font-medium inline-block">
+                  {msg}
+                  {index < marqueeMessages.length - 1 && <span className="mx-12 text-gray-400">···</span>}
+                </span>
+              ))}
             </div>
+          </div>
 
-            {/* Marquee Mobile */}
-            <div className="md:hidden bg-gray-100 text-gray-700 py-1.5 px-4 overflow-hidden border-b border-gray-300">
-              <div className="animate-marquee-mobile text-xs font-medium whitespace-nowrap">
-                {marqueeMessages[0]} ··· {marqueeMessages[1]} ··· {marqueeMessages[4]}
-              </div>
+          {/* Marquee Mobile */}
+          <div className="md:hidden bg-gray-100 text-gray-700 py-1.5 px-4 overflow-hidden border-b border-gray-300">
+            <div className="animate-marquee-mobile text-xs font-medium whitespace-nowrap">
+              {marqueeMessages[0]} ··· {marqueeMessages[1]} ··· {marqueeMessages[4]}
             </div>
           </div>
         </div>
@@ -169,31 +153,10 @@ const Header = ({ config }: HeaderProps) => {
           onOpenTabletMenu={() => setIsTabletMenuOpen(true)}
         />
 
-        {/* NAVBAR - Desktop luôn hiển thị */}
+        {/* NAVBAR - CHỈ HIỂN THỊ TRÊN DESKTOP */}
         <div className="hidden lg:block bg-gray-800">
           <div className="max-w-7xl mx-auto px-4">
             <NavBar />
-          </div>
-        </div>
-
-        {/* TABLET MENU - luôn hiển thị trên tablet */}
-        <div className="lg:hidden md:block">
-          <div className="bg-gray-700 py-3">
-            <div className="max-w-7xl mx-auto px-4">
-              <Menu
-                mode="horizontal"
-                items={mainMenuItems.slice(0, 5)}
-                className="bg-transparent border-none text-white justify-center text-base"
-                overflowedIndicator={
-                  <button onClick={() => setIsTabletMenuOpen(true)} className="text-white">
-                    <span className="mr-1">Thêm</span>
-                    <svg className="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M5 7l5 5 5-5" />
-                    </svg>
-                  </button>
-                }
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -263,7 +226,7 @@ const Header = ({ config }: HeaderProps) => {
         </Drawer>
       )}
 
-      {/* TABLET MENU DRAWER */}
+      {/* TABLET MENU DRAWER - VẪN GIỮ ĐỂ DÙNG CHO TABLET */}
       {isTabletMenuOpen && mounted && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div

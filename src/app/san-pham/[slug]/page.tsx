@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Home, ChevronRight } from "lucide-react";
 
 // Hooks
 import { useProductBySlug } from "@/hooks/product/useProductBySlug";
@@ -24,75 +24,6 @@ import { formatVND } from "@/utils/helpers";
 import ProductImageGallery from "@/components/layout/product/ProductImageGallery";
 import { useCartStore } from "@/stores/cartStore";
 import ProductAttributesDisplay from "@/components/layout/product/ProductAttributesDisplay";
-
-// Mobile Breadcrumb Component
-const MobileBreadcrumb = ({ 
-  categoryName, 
-  productName, 
-  categoryId 
-}: { 
-  categoryName?: string; 
-  productName: string;
-  categoryId?: number;
-}) => {
-  return (
-    <div className="lg:hidden flex items-center justify-between bg-white px-3 py-2 border-b border-gray-200">
-      <button
-        onClick={() => window.history.back()}
-        className="flex items-center gap-1 text-gray-700 hover:text-gray-900"
-      >
-        <span className="text-sm">← Quay lại</span>
-      </button>
-      
-      <div className="flex-1 text-center">
-        <span className="text-sm font-medium text-gray-900 truncate max-w-[200px] inline-block">
-          {productName}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-// Desktop Breadcrumb
-const DesktopBreadcrumb = ({ categoryName, productName, categoryId }: { 
-  categoryName?: string; 
-  productName: string;
-  categoryId?: number;
-}) => {
-  return (
-    <nav className="hidden lg:block bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto py-2">
-        <div className="flex items-center text-sm text-gray-600">
-          <Link href="/" className="text-gray-700 hover:text-gray-900">
-            Trang chủ
-          </Link>
-          <span className="mx-1">/</span>
-          
-          <Link href="/san-pham" className="text-gray-700 hover:text-gray-900">
-            Sản phẩm
-          </Link>
-          
-          {categoryName && categoryId && (
-            <>
-              <span className="mx-1">/</span>
-              <Link 
-                href={`/san-pham?category=${categoryId}`}
-                className="text-gray-700 hover:text-gray-900"
-              >
-                {categoryName}
-              </Link>
-            </>
-          )}
-          
-          <span className="mx-1">/</span>
-          <span className="text-gray-900 font-medium truncate max-w-[200px]">
-            {productName}
-          </span>
-        </div>
-      </div>
-    </nav>
-  );
-};
 
 // Loading skeleton
 const ProductDetailSkeleton = () => (
@@ -590,17 +521,72 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Mobile Breadcrumb */}
-      <MobileBreadcrumb 
-        categoryName={categoryName}
-        productName={product.name}
-      />
+      {/* Mobile Breadcrumb - HIỆN ĐẦY ĐỦ */}
+      <div className="lg:hidden bg-white border-b border-gray-200">
+        <div className="px-4 py-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
+            <Link href="/" className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 whitespace-nowrap">
+              <Home className="w-3.5 h-3.5" />
+            </Link>
+            
+            <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+            
+            <Link href="/san-pham" className="text-sm text-gray-700 hover:text-gray-900 whitespace-nowrap">
+              Sản phẩm
+            </Link>
+            
+            {categoryName && product.categoryId && (
+              <>
+                <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                <Link 
+                  href={`/san-pham?category=${product.categoryId}`}
+                  className="text-sm text-gray-700 hover:text-gray-900 truncate max-w-[120px] whitespace-nowrap"
+                >
+                  {categoryName}
+                </Link>
+              </>
+            )}
+            
+            <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+            <span className="text-sm text-gray-900 font-medium truncate max-w-[150px] whitespace-nowrap">
+              {product.name}
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Desktop Breadcrumb */}
-      <DesktopBreadcrumb 
-        categoryName={categoryName}
-        productName={product.name}
-      />
+      <div className="hidden lg:block bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto py-3">
+          <div className="flex items-center text-sm text-gray-600">
+            <Link href="/" className="text-gray-700 hover:text-gray-900">
+              Trang chủ
+            </Link>
+            <span className="mx-1">/</span>
+            
+            <Link href="/san-pham" className="text-gray-700 hover:text-gray-900">
+              Sản phẩm
+            </Link>
+            
+            {categoryName && product.categoryId && (
+              <>
+                <span className="mx-1">/</span>
+                <Link 
+                  href={`/san-pham?category=${product.categoryId}`}
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  {categoryName}
+                </Link>
+              </>
+            )}
+            
+            <span className="mx-1">/</span>
+            <span className="text-gray-900 font-medium truncate max-w-[200px]">
+              {product.name}
+            </span>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto py-4 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
@@ -752,7 +738,7 @@ useEffect(() => {
                     <div className="text-xs text-yellow-700 mt-1">
                       Vui lòng chọn thuộc tính khác
                     </div>
-                  </div>
+                </div>
                 )}
               </div>
             )}
@@ -850,6 +836,16 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }

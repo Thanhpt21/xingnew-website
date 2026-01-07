@@ -86,7 +86,7 @@ const TopBar = ({
 
   return (
     <div className="border-b border-gray-200 bg-white will-change-transform">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-16 lg:h-20 gap-3">
           {/* MOBILE HAMBURGER MENU */}
           <button
@@ -97,7 +97,7 @@ const TopBar = ({
             <MenuOutlined className="text-lg sm:text-xl text-gray-700" />
           </button>
 
-          {/* LOGO */}
+          {/* LOGO - TO HƠN TRÊN MOBILE */}
           <Link href="/" className="flex items-center flex-shrink-0">
             <Image
               src={getImageUrl(config?.logo) || "/images/logo.png"}
@@ -105,7 +105,7 @@ const TopBar = ({
               width={0}
               height={0}
               sizes="100vw"
-              className="object-contain h-10 sm:h-10 md:h-8 lg:h-16 w-auto max-w-[200px] sm:max-w-[140px] md:max-w-none"
+              className="object-contain h-12 sm:h-12 md:h-8 lg:h-16 w-auto max-w-[220px] sm:max-w-[160px] md:max-w-none"
               priority
               style={{ width: 'auto' }}
             />
@@ -116,17 +116,17 @@ const TopBar = ({
             <SearchBar />
           </div>
 
-          {/* MOBILE SEARCH TOGGLE */}
-          <button
-            className="md:hidden flex-shrink-0"
-            onClick={() => setShowMobileSearch(!showMobileSearch)}
-            aria-label="Search"
-          >
-            <SearchOutlined className="text-lg sm:text-xl text-gray-700" />
-          </button>
-
           {/* RIGHT ACTIONS */}
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+            {/* MOBILE SEARCH TOGGLE - ĐÃ DI CHUYỂN VÀO ĐÂY */}
+            <button
+              className="md:hidden flex-shrink-0"
+              onClick={() => setShowMobileSearch(!showMobileSearch)}
+              aria-label="Search"
+            >
+              <SearchOutlined className="text-lg sm:text-xl text-gray-700" />
+            </button>
+
             {/* USER - Desktop/Tablet */}
             <div className="hidden md:block">
               <Dropdown
@@ -163,7 +163,7 @@ const TopBar = ({
               </Dropdown>
             </div>
 
-            {/* USER - Mobile */}
+            {/* USER - Mobile - KHÔNG CẦN BACKGROUND */}
             <div className="md:hidden">
               <Dropdown
                 menu={{ items: userMenuItems }}
@@ -171,14 +171,7 @@ const TopBar = ({
                 placement="bottomRight"
               >
                 <button className="p-1">
-                  {currentUser ? (
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gray-800 rounded-full opacity-20"></div>
-                      <UserOutlined className="text-lg sm:text-xl text-gray-700 relative" />
-                    </div>
-                  ) : (
-                    <UserOutlined className="text-lg sm:text-xl text-gray-700" />
-                  )}
+                  <UserOutlined className="text-lg sm:text-xl text-gray-700" />
                 </button>
               </Dropdown>
             </div>

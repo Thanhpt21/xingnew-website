@@ -83,7 +83,7 @@ const NavBar = () => {
             {open && (
               <div className="absolute left-0 top-full mt-3 z-50 w-screen max-w-[1200px]">
                 <div className="bg-white text-gray-800 rounded-xl shadow-2xl min-w-[850px] border border-gray-200 overflow-hidden mx-auto animate-fade-in">
-                  <CategoryThreeLevelMenu />
+                  <CategoryThreeLevelMenu onItemClick={() => setOpen(false)} />
                 </div>
               </div>
             )}

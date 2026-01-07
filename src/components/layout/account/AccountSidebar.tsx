@@ -3,10 +3,10 @@
 
 import React, { memo, useCallback, useMemo } from 'react';
 
-// Cập nhật type để thêm 'pcb-orders'
+// Cập nhật type để bỏ 'pcb-orders'
 interface AccountSidebarProps {
-  onMenuClick: (key: 'personal' | 'address' | 'history' | 'pcb-orders') => void;
-  selected: 'personal' | 'address' | 'history' | 'pcb-orders';
+  onMenuClick: (key: 'personal' | 'address' | 'history') => void;
+  selected: 'personal' | 'address' | 'history';
 }
 
 // Pre-rendered SVG icons để tránh tạo lại mỗi lần render
@@ -29,25 +29,17 @@ const HistoryIcon = memo(() => (
   </svg>
 ));
 
-// Thêm icon mới cho PCB Orders
-const PcbOrdersIcon = memo(() => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-  </svg>
-));
-
 PersonalIcon.displayName = 'PersonalIcon';
 AddressIcon.displayName = 'AddressIcon';
 HistoryIcon.displayName = 'HistoryIcon';
-PcbOrdersIcon.displayName = 'PcbOrdersIcon';
 
-// Cập nhật MenuItemProps để thêm 'pcb-orders'
+// Cập nhật MenuItemProps để bỏ 'pcb-orders'
 interface MenuItemProps {
-  itemKey: 'personal' | 'address' | 'history' | 'pcb-orders';
+  itemKey: 'personal' | 'address' | 'history';
   label: string;
   icon: React.ReactNode;
   isSelected: boolean;
-  onClick: (key: 'personal' | 'address' | 'history' | 'pcb-orders') => void;
+  onClick: (key: 'personal' | 'address' | 'history') => void;
 }
 
 const MenuItem = memo(({ itemKey, label, icon, isSelected, onClick }: MenuItemProps) => {
@@ -83,7 +75,7 @@ MenuItem.displayName = 'MenuItem';
 
 // Main component
 const AccountSidebar: React.FC<AccountSidebarProps> = ({ onMenuClick, selected }) => {
-  // Cập nhật menu items để thêm PCB Orders
+  // Cập nhật menu items để bỏ PCB Orders
   const menuItems = useMemo(() => [
     {
       key: 'personal' as const,
@@ -100,15 +92,10 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ onMenuClick, selected }
       label: 'Lịch sử mua hàng',
       icon: <HistoryIcon />,
     },
-    {
-      key: 'pcb-orders' as const,
-      label: 'Đơn hàng PCB',
-      icon: <PcbOrdersIcon />,
-    },
   ], []);
 
   // Memoized click handler để tránh tạo lại function
-  const handleMenuClick = useCallback((key: 'personal' | 'address' | 'history' | 'pcb-orders') => {
+  const handleMenuClick = useCallback((key: 'personal' | 'address' | 'history') => {
     onMenuClick(key);
   }, [onMenuClick]);
 
