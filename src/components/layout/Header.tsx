@@ -5,7 +5,7 @@ import {
   LoadingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLogout } from "@/hooks/auth/useLogout";
 import { useCartStore } from "@/stores/cartStore";
@@ -59,15 +59,6 @@ const Header = ({ config }: HeaderProps) => {
     };
   }, [scrolled]);
 
-  const marqueeMessages = [
-    "Xing New - Nhà phân phối giấy in nhiệt, giấy in mã vạch, băng keo chính hãng",
-    "Giấy in nhiệt K57 • K80 • K110 - Chất lượng cao, giá tốt nhất",
-    "Băng keo trong, đục, dán thùng - Đủ kích thước, giao hàng nhanh chóng",
-    "Giấy decal mã vạch, ruy băng mực in barcode - Luôn sẵn hàng",
-    "Miễn phí vận chuyển nội thành HN & HCM cho đơn từ 2.000.000đ",
-    "Hotline: 0909.xxx.xxx - Tư vấn & báo giá nhanh 24/7",
-  ];
-
   const mainMenuItems = useMemo(() => {
     const items = [
       { label: <a href="/">Trang chủ</a>, key: "home" },
@@ -108,39 +99,6 @@ const Header = ({ config }: HeaderProps) => {
     <>
       {/* STICKY HEADER */}
       <div className="sticky top-0 z-40 bg-white shadow-sm">
-        {/* Marquee container - smooth collapse */}
-        <div 
-          className="overflow-hidden transition-all duration-300 ease-out"
-          style={{ 
-            maxHeight: scrolled ? '0px' : '200px',
-          }}
-        >
-          {/* MARQUEE Desktop */}
-          <div className="hidden md:block bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 text-gray-700 py-2 overflow-hidden border-b border-gray-300">
-            <div className="animate-marquee whitespace-nowrap inline-block">
-              {marqueeMessages.map((msg, index) => (
-                <span key={index} className="mx-12 text-sm font-medium inline-block">
-                  {msg}
-                  {index < marqueeMessages.length - 1 && <span className="mx-12 text-gray-400">···</span>}
-                </span>
-              ))}
-              {marqueeMessages.map((msg, index) => (
-                <span key={`dup-${index}`} className="mx-12 text-sm font-medium inline-block">
-                  {msg}
-                  {index < marqueeMessages.length - 1 && <span className="mx-12 text-gray-400">···</span>}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Marquee Mobile */}
-          <div className="md:hidden bg-gray-100 text-gray-700 py-1.5 px-4 overflow-hidden border-b border-gray-300">
-            <div className="animate-marquee-mobile text-xs font-medium whitespace-nowrap">
-              {marqueeMessages[0]} ··· {marqueeMessages[1]} ··· {marqueeMessages[4]}
-            </div>
-          </div>
-        </div>
-
         {/* TOPBAR - luôn hiển thị */}
         <TopBar
           config={config}
@@ -160,28 +118,6 @@ const Header = ({ config }: HeaderProps) => {
           </div>
         </div>
       </div>
-
-      {/* CSS cho marquee */}
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 50s linear infinite;
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-
-        @keyframes marquee-mobile {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee-mobile {
-          animation: marquee-mobile 35s linear infinite;
-        }
-      `}</style>
 
       {/* MOBILE MENU DRAWER */}
       {mounted && (

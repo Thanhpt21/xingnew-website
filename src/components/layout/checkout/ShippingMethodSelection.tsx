@@ -59,7 +59,7 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
       setSelectedShippingMethod('standard')
     }
     setLocalSelectedMethod('standard')
-  }, [setSelectedShippingMethod]) // Thêm dependency
+  }, [setSelectedShippingMethod])
 
   // Effect tính phí GHTK - trigger khi thay đổi địa chỉ hoặc phương thức
   useEffect(() => {
@@ -93,11 +93,11 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
     const currentPayload: CalculateFeeDto = {
       pick_province: pickProvince,
       pick_district: pickDistrict,
-      pick_ward: pickWard || '', // Đảm bảo không có undefined
+      pick_ward: pickWard || '',
       pick_address: pickAddress,
       province: deliveryProvince,
       district: deliveryDistrict,
-      ward: deliveryWard || '', // Đảm bảo không có undefined
+      ward: deliveryWard || '',
       address: deliveryAddress || '',
       weight: totalWeight,
       value: totalValue,
@@ -142,7 +142,7 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
     calculateFee,
     setShippingFee,
     onMethodSelected,
-  ]) // Thêm tất cả dependencies
+  ])
 
   const handleSelectMethod = (method: string) => {
     setSelectedShippingMethod(method)
@@ -156,16 +156,22 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
       <div className="mb-4">
         <Row gutter={16} justify="start">
           {/* Giao hàng tiết kiệm */}
-          <Col xs={24} sm={12} className="mb-3">
+          {/* <Col xs={24} sm={12} className="mb-3">
             <Button
               type={localSelectedMethod === 'standard' ? 'primary' : 'default'}
               onClick={() => handleSelectMethod('standard')}
               disabled={isCalculatingFee}
               block
+              className={`
+                ${localSelectedMethod === 'standard' 
+                  ? 'bg-gray-800 border-gray-800 hover:bg-gray-900 hover:border-gray-900' 
+                  : 'border-gray-300 text-gray-800 hover:text-gray-900 hover:border-gray-800'
+                }
+              `}
             >
               Giao hàng tiết kiệm
             </Button>
-          </Col>
+          </Col> */}
 
           {/* Giao hàng nhanh (Xteam) */}
           {/* <Col xs={24} sm={12}>
@@ -174,6 +180,12 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
               onClick={() => handleSelectMethod('xteam')}
               disabled={isCalculatingFee}
               block
+              className={`
+                ${localSelectedMethod === 'xteam' 
+                  ? 'bg-gray-800 border-gray-800 hover:bg-gray-900 hover:border-gray-900' 
+                  : 'border-gray-300 text-gray-800 hover:text-gray-900 hover:border-gray-800'
+                }
+              `}
             >
               Giao hàng nhanh (Xteam)
             </Button>
@@ -184,26 +196,26 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
       {/* Hiển thị phí giao hàng */}
       {localSelectedMethod && (
         <div className="mb-4">
-          <Text strong>
+          <Text strong className="text-gray-800">
             Phí giao hàng {localSelectedMethod === 'xteam' ? 'nhanh' : 'tiết kiệm'}:
           </Text>
           {isCalculatingFee ? (
             <div className="inline-flex items-center ml-2">
               <Spin size="small" className="mr-2" />
-              <Text type="warning">Đang tính phí...</Text>
+              <Text className="text-yellow-600">Đang tính phí...</Text>
             </div>
           ) : actualCalculatedFee !== null ? (
-            <Text className="ml-2">
+            <Text className="ml-2 text-gray-900 font-semibold">
               {actualCalculatedFee.toLocaleString('vi-VN')} VNĐ
             </Text>
           ) : (
             <div>
-              <Text type="danger" className="block">
+              <Text className="block text-red-600">
                 Không thể tính phí (vui lòng kiểm tra địa chỉ giao hàng)
               </Text>
               {/* ✅ Hiển thị lý do lỗi cho giao hàng nhanh */}
               {localSelectedMethod === 'xteam' && (totalValue < 1 || totalValue > 20000000) && (
-                <Text type="warning" className="text-sm block mt-1">
+                <Text className="text-sm block mt-1 text-yellow-700">
                   Giao hàng nhanh yêu cầu giá trị đơn hàng từ 1đ - 20,000,000đ. 
                   Giá trị hiện tại: {totalValue.toLocaleString('vi-VN')}đ
                 </Text>
@@ -212,14 +224,14 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
           )}
 
           <br />
-          <Text type="secondary" className="text-sm">
+          <Text className="text-sm text-gray-600">
             {localSelectedMethod === 'xteam' 
               ? 'Thời gian giao hàng nhanh: Trong ngày.' 
-              : 'Thời gian giao hàng tiết kiệm: 3-7 ngày làm việc.'}
+              : 'Thời gian giao hàng tiết kiệm: 1-3 ngày làm việc.'}
           </Text>
 
           <div className="mt-4 flex flex-wrap gap-3 items-center">
-            <Text strong>Được hỗ trợ bởi:</Text>
+            <Text strong className="text-gray-800">Được hỗ trợ bởi:</Text>
             <div className="relative w-24 h-8">
               <Image
                 src="/image/ghtk.png"
@@ -233,7 +245,7 @@ const ShippingMethodSelection: React.FC<ShippingMethodSelectionProps> = ({
       )}
 
       {ghtkError && (
-        <Text type="danger" className="text-sm block mt-2">
+        <Text className="text-sm block mt-2 text-red-600">
           Lỗi: {ghtkError.message || 'Không thể tính phí vận chuyển.'}
         </Text>
       )}

@@ -2,7 +2,9 @@
 
 import React, { useState, useCallback } from "react";
 import { useCreateContact } from "@/hooks/contact/useCreateContact";
-import { CreateContactPayload } from "@/types/contact.type";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useConfigs } from "@/hooks/config/useConfigs"; // Thêm import hook cho config
 
 // Define the configuration type
 interface SiteConfig {
@@ -29,9 +31,47 @@ interface SiteConfig {
   showGooglemap: boolean;
 }
 
+// Hàm chuyển đổi dữ liệu API thành SiteConfig
+const mapApiDataToConfig = (apiData: any): SiteConfig => {
+  return {
+    name: apiData.name || "",
+    address: apiData.address || "",
+    mobile: apiData.mobile || "",
+    email: apiData.email || "",
+    facebook: apiData.facebook || "",
+    instagram: apiData.instagram || "",
+    youtube: apiData.youtube || "",
+    x: apiData.x || "",
+    linkedin: apiData.linkedin || "",
+    zalo: apiData.zalo || "",
+    googlemap: apiData.googlemap || "",
+    showAddress: apiData.showAddress !== false, // Mặc định là true
+    showMobile: apiData.showMobile !== false,
+    showEmail: apiData.showEmail !== false,
+    showFacebook: apiData.showFacebook !== false,
+    showInstagram: apiData.showInstagram !== false,
+    showYoutube: apiData.showYoutube !== false,
+    showX: apiData.showX !== false,
+    showLinkedin: apiData.showLinkedin !== false,
+    showZalo: apiData.showZalo !== false,
+    showGooglemap: apiData.showGooglemap !== false,
+  };
+};
+
 export default function ContactPage() {
   const createContactMutation = useCreateContact();
   
+  // ✅ GỌI API CONFIG
+  const {
+    data: configsData,
+    isLoading: isLoadingConfig,
+    isError: isErrorConfig,
+  } = useConfigs({ page: 1, limit: 1 });
+
+  // ✅ LẤY PHẦN TỬ ĐẦU TIÊN và chuyển đổi
+  const configData = configsData?.data?.[0];
+  const config: SiteConfig | null = configData ? mapApiDataToConfig(configData) : null;
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -39,31 +79,8 @@ export default function ContactPage() {
     message: "",
   });
 
-  const [config, setConfig] = useState<SiteConfig>({
-    name: "Công ty ABC",
-    address: "123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh",
-    mobile: "090 123 4567",
-    email: "contact@company.com",
-    facebook: "https://facebook.com/company",
-    instagram: "https://instagram.com/company",
-    youtube: "https://youtube.com/company",
-    x: "https://twitter.com/company",
-    linkedin: "https://linkedin.com/company",
-    zalo: "0987654321",
-    googlemap: '<iframe src="https://maps.google.com/maps?q=company&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>',
-    showAddress: true,
-    showMobile: true,
-    showEmail: true,
-    showFacebook: true,
-    showInstagram: true,
-    showYoutube: true,
-    showX: true,
-    showLinkedin: true,
-    showZalo: true,
-    showGooglemap: true,
-  });
-
   const extractMapSrc = useCallback((embedCode: string): string => {
+    if (!embedCode) return "";
     const srcMatch = embedCode?.match(/src="([^"]+)"/);
     return srcMatch ? srcMatch[1] : "";
   }, []);
@@ -107,23 +124,51 @@ export default function ContactPage() {
     }));
   }, []);
 
+  // Hiển thị loading state
+  if (isLoadingConfig) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Đang tải thông tin liên hệ...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Hiển thị error state
+  if (isErrorConfig) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center text-red-600">
+          <p>Có lỗi xảy ra khi tải thông tin liên hệ. Vui lòng thử lại sau.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto py-6 px-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+      >
+        <div className="max-w-7xl mx-auto py-4">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900 font-medium">
+            <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
               Trang chủ
-            </a>
+            </Link>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-600">Liên hệ</span>
+            <span className="text-gray-800 font-semibold">Liên hệ</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main container */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24">
+      <div className="max-w-7xl mx-auto py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

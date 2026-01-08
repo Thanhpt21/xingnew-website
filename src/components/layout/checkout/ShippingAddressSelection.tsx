@@ -57,7 +57,7 @@ const ShippingAddressSelection: React.FC<ShippingAddressSelectionProps> = ({
           <p className="text-gray-600 mb-3">Bạn chưa có địa chỉ giao hàng</p>
           <button
             onClick={handleAddNewAddress}
-            className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700"
+            className="px-4 py-2 bg-gray-800 text-white hover:bg-gray-900 transition-colors"
           >
             + Thêm địa chỉ mới
           </button>
@@ -71,7 +71,7 @@ const ShippingAddressSelection: React.FC<ShippingAddressSelectionProps> = ({
       <div className="mb-4">
         <button
           onClick={handleAddNewAddress}
-          className="px-3 py-2 text-blue-600 border border-blue-300 hover:bg-blue-50"
+          className="px-3 py-2 text-gray-800 border border-gray-300 hover:bg-gray-50 transition-colors"
         >
           + Thêm địa chỉ mới
         </button>
@@ -86,17 +86,17 @@ const ShippingAddressSelection: React.FC<ShippingAddressSelectionProps> = ({
               key={address.id}
               onClick={() => handleAddressSelect(address.id)}
               className={`
-                p-3 border cursor-pointer
-                ${isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}
+                p-3 border cursor-pointer transition-colors
+                ${isSelected ? 'border-gray-800 bg-gray-50' : 'border-gray-200 hover:border-gray-300'}
               `}
             >
               <div className="mb-2">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{address.name}</span>
-                  <span className="text-gray-600">•</span>
+                  <span className="font-medium text-gray-900">{address.name}</span>
+                  <span className="text-gray-400">•</span>
                   <span className="text-gray-700">{address.phone}</span>
                   {address.is_default && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1">
+                    <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1">
                       Mặc định
                     </span>
                   )}
@@ -117,7 +117,7 @@ const ShippingAddressSelection: React.FC<ShippingAddressSelectionProps> = ({
               )}
               
               {isSelected && (
-                <div className="mt-2 text-sm text-blue-600">
+                <div className="mt-2 text-sm text-gray-800 font-medium">
                   ✓ Đã chọn
                 </div>
               )}
@@ -126,23 +126,6 @@ const ShippingAddressSelection: React.FC<ShippingAddressSelectionProps> = ({
         })}
       </div>
       
-      {/* Selected address summary */}
-      {selectedAddress && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200">
-          <div className="font-medium text-blue-800 mb-1">
-            Địa chỉ giao hàng:
-          </div>
-          <p className="text-sm text-gray-700">
-            {selectedAddress.name} • {selectedAddress.phone}
-          </p>
-          <p className="text-sm text-gray-600">
-            {selectedAddress.address}
-            {selectedAddress.ward && `, ${selectedAddress.ward}`}
-            {selectedAddress.district && `, ${selectedAddress.district}`}
-            {selectedAddress.province && `, ${selectedAddress.province}`}
-          </p>
-        </div>
-      )}
     </div>
   );
 };

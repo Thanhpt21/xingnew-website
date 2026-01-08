@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -42,7 +42,7 @@ const ProductDetailSkeleton = () => (
   </div>
 );
 
-// Attribute Selection Component
+// Attribute Selection Component - ĐÃ SỬA
 const AttributeSelection = ({ 
   attr, 
   variants, 
@@ -56,12 +56,23 @@ const AttributeSelection = ({
   selectedAttributes: Record<string, number>;
   onSelect: (attrId: string, valueId: number) => void;
 }) => {
+  // Lấy tất cả giá trị của attribute này
+  const allValues = useMemo(() => {
+    if (!allAttributeValues?.data) return [];
+    return allAttributeValues.data.filter((av: any) => av.attributeId === attr.id);
+  }, [allAttributeValues, attr.id]);
+
+  // Tìm các giá trị có sẵn dựa trên các thuộc tính đã chọn
   const availableValues = useMemo(() => {
-    if (!variants || !allAttributeValues?.data) return [];
+    if (!variants || variants.length === 0) return allValues;
     
     const filteredVariants = variants.filter(variant => {
       return Object.entries(selectedAttributes).every(([selectedAttrId, selectedValueId]) => {
-        return variant.attrValues?.[selectedAttrId] === selectedValueId;
+        // Nếu đây không phải là attribute hiện tại, kiểm tra xem variant có khớp không
+        if (selectedAttrId !== attr.id.toString()) {
+          return variant.attrValues?.[selectedAttrId] === selectedValueId;
+        }
+        return true; // Không kiểm tra attribute hiện tại
       });
     });
     
@@ -71,10 +82,16 @@ const AttributeSelection = ({
       if (valueId) valueIds.add(valueId);
     });
     
-    return allAttributeValues.data.filter((av: any) => 
-      av.attributeId === attr.id && valueIds.has(av.id)
-    );
-  }, [variants, allAttributeValues, selectedAttributes, attr.id]);
+    // Luôn hiển thị tất cả giá trị, nhưng disable những giá trị không khả dụng
+    return allValues.map((av: any) => ({
+      ...av,
+      available: valueIds.has(av.id) || selectedAttributes[attr.id.toString()] === av.id
+    }));
+  }, [variants, selectedAttributes, attr.id, allValues]);
+
+  const isSelected = (valueId: number) => {
+    return selectedAttributes[attr.id.toString()] === valueId;
+  };
 
   if (availableValues.length === 0) return null;
 
@@ -84,22 +101,45 @@ const AttributeSelection = ({
         {attr.name}
       </label>
       <div className="flex flex-wrap gap-2">
-        {availableValues.map((av: any) => (
-          <button
-            key={av.id}
-            onClick={() => onSelect(attr.id.toString(), av.id)}
-            className={`
-              px-3 py-2 rounded border text-sm
-              ${selectedAttributes[attr.id.toString()] === av.id
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 text-gray-700'
-              }
-            `}
-          >
-            {av.value}
-          </button>
-        ))}
+        {availableValues.map((av: any) => {
+          const selected = isSelected(av.id);
+          return (
+            <button
+              key={av.id}
+              onClick={() => {
+                if (selected) {
+                  // Nếu đã chọn rồi thì bỏ chọn
+                  onSelect(attr.id.toString(), 0);
+                } else if (av.available) {
+                  // Nếu chưa chọn và có sẵn thì chọn
+                  onSelect(attr.id.toString(), av.id);
+                }
+              }}
+              disabled={!av.available && !selected}
+              className={`
+                px-3 py-2 rounded border text-sm transition-all relative
+                ${selected
+                  ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-200'
+                  : av.available
+                  ? 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 text-gray-700'
+                  : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                }
+              `}
+            >
+              {av.value}
+              {selected && (
+                <span className="ml-1">✓</span>
+              )}
+              {!av.available && !selected && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100/50">
+                  <div className="w-full h-px bg-gray-300 rotate-12"></div>
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
+      
     </div>
   );
 };
@@ -160,10 +200,6 @@ const QuantityControl = ({
           <Plus size={16} />
         </button>
       </div>
-      
-      <span className="text-sm text-gray-500">
-        Còn {maxQuantity} sản phẩm
-      </span>
     </div>
   );
 };
@@ -218,21 +254,27 @@ export default function ProductDetailPage() {
     return variants && variants.length > 0;
   }, [variants]);
 
+  // Get all attribute IDs from variants
+  const allAttributeIds = useMemo(() => {
+    if (!hasVariants) return new Set<string>();
+    
+    const ids = new Set<string>();
+    variants?.forEach(variant => {
+      Object.keys(variant.attrValues || {}).forEach(attrId => {
+        ids.add(attrId);
+      });
+    });
+    return ids;
+  }, [hasVariants, variants]);
+
   // Check if all required attributes are selected
   const isAllAttributesSelected = useMemo(() => {
     if (!hasVariants) return true;
     
-    const allAttributeIds = new Set<string>();
-    variants?.forEach(variant => {
-      Object.keys(variant.attrValues || {}).forEach(attrId => {
-        allAttributeIds.add(attrId);
-      });
-    });
-    
     return Array.from(allAttributeIds).every(attrId => 
-      selectedAttributes[attrId] !== undefined
+      selectedAttributes[attrId] !== undefined && selectedAttributes[attrId] !== 0
     );
-  }, [hasVariants, variants, selectedAttributes]);
+  }, [hasVariants, allAttributeIds, selectedAttributes]);
 
   // Variant selection
   useEffect(() => {
@@ -243,14 +285,28 @@ export default function ProductDetailPage() {
       return;
     }
 
+    // Tìm variant khớp với tất cả thuộc tính đã chọn
     const matched = variants.find((v) => {
-      return Object.entries(v.attrValues || {}).every(([attrId, valueId]) => {
-        return selectedAttributes[attrId] === valueId;
+      // Kiểm tra xem variant có đầy đủ các attribute đã chọn
+      const variantAttributeIds = Object.keys(v.attrValues || {});
+      
+      // Phải có tất cả các attribute đã chọn
+      const hasAllSelectedAttributes = Array.from(allAttributeIds).every(attrId => 
+        selectedAttributes[attrId] !== undefined && selectedAttributes[attrId] !== 0
+      );
+      
+      if (!hasAllSelectedAttributes) return false;
+      
+      // Kiểm tra từng attribute đã chọn có khớp với variant không
+      return Object.entries(selectedAttributes).every(([attrId, valueId]) => {
+        // Nếu attribute này chưa chọn hoặc không có trong allAttributeIds thì bỏ qua
+        if (valueId === 0 || !allAttributeIds.has(attrId)) return true;
+        return v.attrValues?.[attrId] === valueId;
       });
     });
 
     setSelectedVariant(matched ?? null);
-  }, [selectedAttributes, variants, product, hasVariants]);
+  }, [selectedAttributes, variants, product, hasVariants, allAttributeIds]);
 
   
   // Calculate current max stock
@@ -268,16 +324,15 @@ export default function ProductDetailPage() {
     return currentMaxStock > 0;
   }, [currentMaxStock]);
 
-
   // Calculate max quantity based on stock
-useEffect(() => {
-  const newMaxQuantity = currentMaxStock > 0 ? currentMaxStock : 1;
-  setMaxQuantity(newMaxQuantity);
-  
-  if (quantity > newMaxQuantity) {
-    setQuantity(newMaxQuantity > 0 ? newMaxQuantity : 1);
-  }
-}, [currentMaxStock, quantity]);
+  useEffect(() => {
+    const newMaxQuantity = currentMaxStock > 0 ? currentMaxStock : 1;
+    setMaxQuantity(newMaxQuantity);
+    
+    if (quantity > newMaxQuantity) {
+      setQuantity(newMaxQuantity > 0 ? newMaxQuantity : 1);
+    }
+  }, [currentMaxStock, quantity]);
 
   // Quantity handlers
   const handleIncreaseQuantity = useCallback(() => {
@@ -461,11 +516,21 @@ useEffect(() => {
     }
   }, [product, isAdding, canAddToCart, getProductData, getVariantData, calculateFinalPrice, addItem, router, quantity]);
 
+  // SỬA: Hàm xử lý chọn thuộc tính với toggle
   const handleAttributeSelect = useCallback((attrId: string, valueId: number) => {
-    setSelectedAttributes(prev => ({
-      ...prev,
-      [attrId]: valueId
-    }));
+    setSelectedAttributes(prev => {
+      const newAttributes = { ...prev };
+      
+      if (valueId === 0) {
+        // Nếu valueId = 0 thì xóa attribute này
+        delete newAttributes[attrId];
+      } else {
+        // Nếu chọn giá trị mới thì ghi đè giá trị cũ
+        newAttributes[attrId] = valueId;
+      }
+      
+      return newAttributes;
+    });
   }, []);
 
   // Reset selection when product changes
@@ -718,17 +783,7 @@ useEffect(() => {
                   />
                 ))}
                 
-                {/* Hiển thị trạng thái chọn variant */}
-                {isAllAttributesSelected && selectedVariant && (
-                  <div className="bg-green-50 border border-green-200 p-3 rounded">
-                    <div className="text-sm font-medium text-green-800">
-                      ✓ Biến thể đã chọn
-                    </div>
-                    <div className="text-xs text-green-700 mt-1">
-                      Mã SKU: {selectedVariant.sku}
-                    </div>
-                  </div>
-                )}
+              
                 
                 {isAllAttributesSelected && !selectedVariant && (
                   <div className="bg-yellow-50 border border-yellow-200 p-3 rounded">
@@ -738,8 +793,10 @@ useEffect(() => {
                     <div className="text-xs text-yellow-700 mt-1">
                       Vui lòng chọn thuộc tính khác
                     </div>
-                </div>
+                  </div>
                 )}
+                
+              
               </div>
             )}
 
@@ -753,7 +810,7 @@ useEffect(() => {
                     <span className="text-red-600">✗ Hết hàng</span>
                   )
                 ) : (
-                  <span>Vui lòng chọn thuộc tính để xem tồn kho</span>
+                  <span>Vui lòng chọn thuộc tính</span>
                 )
               ) : (
                 product.stock > 0 ? (
@@ -778,20 +835,9 @@ useEffect(() => {
                 >
                   {!isInStock ? 'Hết hàng' : isAdding ? 'Đang thêm...' : 'Thêm vào giỏ'}
                 </button>
-                
-               
               </div>
               
-              {hasVariants && !isAllAttributesSelected && (
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded">
-                    <span className="text-blue-600">ℹ️</span>
-                    <span className="text-blue-700 text-sm">
-                      Vui lòng chọn đầy đủ thuộc tính
-                    </span>
-                  </div>
-                </div>
-              )}
+             
             </div>
 
             {/* Service Features */}
@@ -817,7 +863,7 @@ useEffect(() => {
         </div>
 
         <div className="mt-8 bg-white border border-gray-200 rounded overflow-hidden">
-             <ProductAttributesDisplay productId={product.id} categoryId={product.categoryId || 0} />
+          <ProductAttributesDisplay productId={product.id} categoryId={product.categoryId || 0} />
         </div>
 
         {/* Product Description */}

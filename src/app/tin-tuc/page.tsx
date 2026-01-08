@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Input, Select, Pagination, Button, Spin, Empty } from 'antd';
+import { motion } from "framer-motion";
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import { useAllBlogs } from '@/hooks/blog/useAllBlogs';
@@ -148,20 +149,25 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-3">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+      >
+        <div className="max-w-7xl mx-auto py-4">
           <div className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-blue-600 hover:text-blue-700">
+            <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
               Trang chủ
             </Link>
-            <span>/</span>
-            <span className="text-gray-600">Tin tức</span>
+            <span className="text-gray-400">/</span>
+            <span className="text-gray-800 font-semibold">Tin tức</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">

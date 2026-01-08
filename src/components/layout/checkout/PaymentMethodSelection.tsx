@@ -10,7 +10,7 @@ interface PaymentMethodSelectionProps {
 
 // Payment method content components
 const CodContent = () => (
-  <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded">
+  <div className="mt-4 p-4 bg-gray-50 border border-gray-300 rounded">
     <h4 className="font-semibold text-gray-800 mb-2">Thanh toán khi nhận hàng (COD)</h4>
     <p className="text-gray-600 text-sm">
       Thanh toán trực tiếp bằng tiền mặt hoặc chuyển khoản cho nhân viên giao hàng khi nhận sản phẩm.
@@ -20,36 +20,36 @@ const CodContent = () => (
 )
 
 const BankTransferContent = () => (
-  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
+  <div className="mt-4 p-4 bg-gray-50 border border-gray-300 rounded">
     <h4 className="font-semibold text-gray-800 mb-2">Chuyển khoản ngân hàng</h4>
     <p className="text-gray-600 text-sm mb-3">
       Chuyển khoản trước khi đơn hàng được xử lý.
     </p>
     <div className="bg-white p-3 border border-gray-300 rounded text-sm">
       <div className="flex justify-between mb-1">
-        <span>Ngân hàng:</span>
-        <span className="font-medium">Vietcombank</span>
+        <span className="text-gray-700">Ngân hàng:</span>
+        <span className="font-medium text-gray-900">Vietcombank</span>
       </div>
       <div className="flex justify-between mb-1">
-        <span>Số tài khoản:</span>
-        <span className="font-mono font-medium">0011 0023 4567</span>
+        <span className="text-gray-700">Số tài khoản:</span>
+        <span className="font-mono font-medium text-gray-900">0011 0023 4567</span>
       </div>
       <div className="flex justify-between">
-        <span>Chủ tài khoản:</span>
-        <span className="font-medium">CÔNG TY TNHH ABC</span>
+        <span className="text-gray-700">Chủ tài khoản:</span>
+        <span className="font-medium text-gray-900">CÔNG TY TNHH ABC</span>
       </div>
     </div>
   </div>
 )
 
 const VnpayContent = () => (
-  <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded">
+  <div className="mt-4 p-4 bg-gray-50 border border-gray-300 rounded">
     <h4 className="font-semibold text-gray-800 mb-2">Thanh toán qua VNPay</h4>
     <p className="text-gray-600 text-sm mb-3">
       Thanh toán an toàn qua cổng VNPay.
     </p>
     <div className="bg-white p-3 border border-gray-300 rounded">
-      <div className="text-sm font-medium mb-1">Các ngân hàng hỗ trợ</div>
+      <div className="text-sm font-medium mb-1 text-gray-900">Các ngân hàng hỗ trợ</div>
       <div className="text-xs text-gray-500">Vietcombank, BIDV, Techcombank, Agribank</div>
     </div>
   </div>
@@ -125,7 +125,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
   }
 
   return (
-    <div className="bg-whitemb-6 text-gray-600">
+    <div className="bg-white text-gray-600">
 
 
       {/* Method Selection */}
@@ -141,14 +141,14 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
               className={`
                 p-3 rounded border transition-colors
                 ${isSelected 
-                  ? 'border-blue-500 bg-blue-50' 
-                  : 'border-gray-300 hover:bg-gray-50'
+                  ? 'border-gray-800 bg-gray-50' 
+                  : 'border-gray-300 hover:bg-gray-50 hover:border-gray-800'
                 }
               `}
             >
               <div className="text-center">
                 <div className={`text-sm font-medium mb-1 ${
-                  isSelected ? 'text-blue-600' : 'text-gray-800'
+                  isSelected ? 'text-gray-900' : 'text-gray-800'
                 }`}>
                   {method.name}
                 </div>
@@ -167,7 +167,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
       {selectedMethod && (
         <div>
           <div className="mb-3">
-            <span className="font-medium text-gray-700">Chi tiết phương thức thanh toán</span>
+            <span className="font-medium text-gray-800">Chi tiết phương thức thanh toán</span>
           </div>
           {renderSelectedContent()}
         </div>

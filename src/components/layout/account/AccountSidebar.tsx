@@ -51,10 +51,10 @@ const MenuItem = memo(({ itemKey, label, icon, isSelected, onClick }: MenuItemPr
     <button
       onClick={handleClick}
       className={`
-        w-full flex items-center space-x-3 px-4 py-3 text-left
+        w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors
         ${isSelected
-          ? 'bg-blue-600 text-white'
-          : 'text-gray-700 hover:bg-gray-100'
+          ? 'bg-gray-800 text-white hover:bg-gray-900'
+          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
         }
       `}
       aria-current={isSelected ? 'page' : undefined}
@@ -65,7 +65,7 @@ const MenuItem = memo(({ itemKey, label, icon, isSelected, onClick }: MenuItemPr
         {label}
       </span>
       {isSelected && (
-        <span>→</span>
+        <span className="text-white">→</span>
       )}
     </button>
   );

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useMemo } from 'react'
-import { Button, message, Modal, Result, Checkbox, Card, Skeleton } from 'antd'
+import { Button, message, Modal, Result, Checkbox, Card, Skeleton, Empty } from 'antd'
 import { CheckCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/navigation'
 import { CreateOrderDto, OrderItemDto } from '@/types/order.type'
@@ -16,21 +16,22 @@ import { formatVND } from '@/utils/helpers'
 import { useAllAttributes } from '@/hooks/attribute/useAllAttributes'
 import { useAttributeValues } from '@/hooks/attribute-value/useAttributeValues'
 import dynamic from 'next/dynamic'
+import { motion } from "framer-motion";
 import { useCreateOrder } from '@/hooks/order/useCreateOrder'
 
 // Mock data cho warehouses - Chỉ có 1 kho duy nhất
 const warehouse = {
   id: 1,
-  name: "Kho Hà Nội (Trung tâm)",
-  phone: "024 1234 5678",
+  name: "Kho trung tâm",
+  phone: "0948380880",
   location: {
-    address: "123 Đường Láng, Phường Láng Thượng",
-    ward_id: 101,
-    ward_name: "Phường Láng Thượng",
-    district_id: 1,
-    district_name: "Quận Đống Đa",
-    province_id: 1,
-    province_name: "Hà Nội"
+    address: "Số 66, tờ bản đồ 34, ấp Thanh Hiệp",
+    ward_id: 28021,
+    ward_name: "Xã Thanh Phú",
+    district_id: 803,
+    district_name: "Huyện Bến Lức",
+    province_id: 80,
+    province_name: "Tỉnh Long An"
   }
 }
 
@@ -92,7 +93,7 @@ const SimpleCartItem: React.FC<SimpleCartItemProps> = ({
   const attributes = renderAttributes(getAttributes());
 
   return (
-    <div className="flex gap-2 p-2 bg-gray-50 border rounded mb-2">
+    <div className="flex gap-2 p-2 bg-gray-50 border border-gray-200 rounded mb-2">
       <Checkbox
         checked={isSelected}
         onChange={onToggle}
@@ -121,7 +122,7 @@ const SimpleCartItem: React.FC<SimpleCartItemProps> = ({
         )}
         
         <div className="flex items-center justify-between">
-          <span className="text-blue-600 font-medium text-sm">
+          <span className="text-gray-800 font-medium text-sm">
             {formatVND(finalPrice)}
           </span>
           <span className="text-gray-600 text-sm">x {item.quantity}</span>
@@ -143,7 +144,6 @@ const OrderForm: React.FC = () => {
     selectedItems, 
     toggleSelectItem, 
     selectAll,
-    isSelectAll, 
     getSelectedTotal, 
     clearSelectedItems,
     removeItem
@@ -212,35 +212,31 @@ const OrderForm: React.FC = () => {
       .join(', ')
   }
 
-  // Tự động select items
-  useEffect(() => {
-    if (items.length > 0 && selectedItems.size === 0 && mounted) {
-      const idsToSelect = items.slice(0, 10).map(i => i.id)
-      selectAll(true, idsToSelect)
-      
-      if (items.length > 10) {
-        message.info(`Đã chọn 10 sản phẩm đầu tiên`)
-      }
-    }
-  }, [items, selectedItems.size, selectAll, mounted])
+  // Lấy danh sách sản phẩm đã được chọn
+  const selectedCartItems = useMemo(() => {
+    return items.filter(item => selectedItems.has(item.id))
+  }, [items, selectedItems])
 
-  // Tính toán
+  // Tính toán dựa trên sản phẩm đã chọn
   const temporaryTotal = getSelectedTotal()
   const currentShippingFee = shippingFee || 0
   const finalTotal = temporaryTotal + currentShippingFee
-  const isSelectAllDisabled = items.length > 10
 
   const totalWeight = useMemo(() => {
-    return items
-      .filter(item => selectedItems.has(item.id))
-      .reduce((sum, item) => sum + (item.variant?.product?.weight || item.product?.weight || 0) * item.quantity, 0)
-  }, [items, selectedItems])
+    return selectedCartItems.reduce((sum, item) => sum + (item.variant?.product?.weight || item.product?.weight || 0) * item.quantity, 0)
+  }, [selectedCartItems])
 
   const totalValue = useMemo(() => {
-    return items
-      .filter(item => selectedItems.has(item.id))
-      .reduce((sum, item) => sum + (item.finalPrice || item.priceAtAdd || 0) * item.quantity, 0)
-  }, [items, selectedItems])
+    return selectedCartItems.reduce((sum, item) => sum + (item.finalPrice || item.priceAtAdd || 0) * item.quantity, 0)
+  }, [selectedCartItems])
+
+  // Kiểm tra nếu không có sản phẩm nào được chọn
+  useEffect(() => {
+    if (mounted && selectedCartItems.length === 0) {
+      message.warning('Không có sản phẩm nào được chọn trong giỏ hàng')
+      router.push('/gio-hang')
+    }
+  }, [mounted, selectedCartItems.length, router])
 
   // Auto select default shipping address
   useEffect(() => {
@@ -282,8 +278,8 @@ const OrderForm: React.FC = () => {
   }
 
   const handlePlaceOrder = () => {
-    if (items.length === 0) {
-      message.warning('Giỏ hàng trống.')
+    if (selectedCartItems.length === 0) {
+      message.warning('Không có sản phẩm nào được chọn.')
       return
     }
 
@@ -313,15 +309,7 @@ const OrderForm: React.FC = () => {
       return;
     }
 
-    const selectedItemIds = Array.from(selectedItems);
-    const validItems = items.filter(item => selectedItemIds.includes(item.id));
-    
-    if (validItems.length === 0) {
-      message.error('Không có sản phẩm nào được chọn.');
-      return;
-    }
-
-    const orderItems: OrderItemDto[] = validItems.map(item => {
+    const orderItems: OrderItemDto[] = selectedCartItems.map(item => {
       const promotion = item.product?.promotionProducts?.[0];
       
       if (!item.productId) {
@@ -376,7 +364,8 @@ const OrderForm: React.FC = () => {
         
         message.success('Đặt hàng thành công!');
 
-        validItems.forEach(item => {
+        // Xóa các sản phẩm đã đặt hàng khỏi giỏ hàng
+        selectedCartItems.forEach(item => {
           removeItem(item.id);
         });
         
@@ -411,7 +400,7 @@ const OrderForm: React.FC = () => {
   if (!mounted || isLoadingShippingAddresses) {
     return (
       <div className="py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+        <div className="container mx-auto max-w-7xl">
           <Skeleton active paragraph={{ rows: 1 }} className="mb-6" />
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <div className="lg:col-span-7 space-y-4">
@@ -431,6 +420,40 @@ const OrderForm: React.FC = () => {
               </Card>
             </div>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Nếu không có sản phẩm nào được chọn
+  if (selectedCartItems.length === 0) {
+    return (
+      <div className="py-12">
+        <div className="container mx-auto max-w-2xl px-4">
+          <Card>
+            <Result
+              status="warning"
+              title="Không có sản phẩm nào được chọn"
+              subTitle="Vui lòng quay lại giỏ hàng và chọn sản phẩm để đặt hàng"
+              extra={[
+                <Button 
+                  type="primary" 
+                  key="cart" 
+                  onClick={() => router.push('/gio-hang')}
+                  className="mb-2 bg-gray-800 hover:bg-gray-900 border-none"
+                >
+                  Quay lại giỏ hàng
+                </Button>,
+                <Button 
+                  key="shop" 
+                  onClick={() => router.push('/san-pham')}
+                  className="border-gray-300 text-gray-800 hover:text-gray-900 hover:border-gray-800"
+                >
+                  Tiếp tục mua sắm
+                </Button>,
+              ]}
+            />
+          </Card>
         </div>
       </div>
     )
@@ -456,13 +479,14 @@ const OrderForm: React.FC = () => {
                   type="primary" 
                   key="orders" 
                   onClick={() => router.push('/tai-khoan?p=history')}
-                  className="mb-2"
+                  className="mb-2 bg-gray-800 hover:bg-gray-900 border-none"
                 >
                   Xem đơn hàng
                 </Button>,
                 <Button 
                   key="shop" 
                   onClick={() => router.push('/san-pham')}
+                  className="border-gray-300 text-gray-800 hover:text-gray-900 hover:border-gray-800"
                 >
                   Tiếp tục mua sắm
                 </Button>,
@@ -475,34 +499,36 @@ const OrderForm: React.FC = () => {
   }
 
   return (
-    <div className="py-6">
-      <div className="container mx-auto max-w-7xl px-4">
+    <div className="">
+      <div className="container mx-auto max-w-7xl">
         {/* Breadcrumb */}
-        <div className="mb-6 text-gray-600 flex ">
-          <Link href="/gio-hang" className="flex items-center gap-1 hover:text-blue-600">
-            <ShoppingCartOutlined />
-            <span>Giỏ hàng</span>
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="font-medium">Thanh toán</span>
-        </div>
-
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
-            Thanh toán
-          </h1>
-          <p className="text-gray-600">
-            Hoàn tất đơn hàng của bạn
-          </p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+        >
+          <div className="max-w-7xl mx-auto py-4">
+            <div className="flex items-center gap-2 text-sm">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                Trang chủ
+              </Link>
+              <span className="text-gray-400">/</span>
+              <Link href="/gio-hang" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                Giỏ hàng
+              </Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-800 font-semibold">Đặt hàng</span>
+            </div>
+          </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left Column */}
           <div className="lg:col-span-7 space-y-4">
             {/* Shipping Address */}
-            <Card>
-              <h3 className="font-bold mb-4">Địa chỉ giao hàng</h3>
+            <Card className="border border-gray-200">
+              <h3 className="font-bold mb-4 text-gray-900">Địa chỉ giao hàng</h3>
               <ShippingAddressSelection
                 shippingAddresses={shippingAddresses || []}
                 onSelectAddress={handleSelectShippingAddress}
@@ -510,8 +536,8 @@ const OrderForm: React.FC = () => {
             </Card>
 
             {/* Shipping Method */}
-            <Card>
-              <h3 className="font-bold mb-4">Phương thức vận chuyển</h3>
+            <Card className="border border-gray-200">
+              <h3 className="font-bold mb-4 text-gray-900">Phương thức vận chuyển</h3>
               <ShippingMethodSelection
                 onMethodSelected={handleSelectShippingMethod}
                 deliveryProvince={selectedShippingAddress?.province || ''}
@@ -528,45 +554,36 @@ const OrderForm: React.FC = () => {
             </Card>
 
             {/* Payment Method */}
-            <Card>
-              <h3 className="font-bold mb-4">Phương thức thanh toán</h3>
+            <Card className="border border-gray-200">
+              <h3 className="font-bold mb-4 text-gray-900">Phương thức thanh toán</h3>
               <PaymentMethodSelection onMethodSelected={setPaymentMethod} />
             </Card>
           </div>
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-5">
-            <div className="bg-white p-4 border rounded">
-              <h3 className="font-bold mb-4">Tóm tắt đơn hàng</h3>
+            <div className="bg-white p-4 border border-gray-200 rounded">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-gray-900">Sản phẩm đã chọn</h3>
+                <Button 
+                  type="text" 
+                  size="small" 
+                  onClick={() => {
+                    selectAll(false, selectedCartItems.map(item => item.id))
+                  }}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  Bỏ chọn tất cả
+                </Button>
+              </div>
               
               <div className="space-y-4">
-                {/* Select All */}
-                <div className="flex items-center">
-                  <Checkbox
-                    checked={isSelectAll()}
-                    onChange={(e) => {
-                      const checked = e.target.checked
-                      if (checked && items.length > 10) {
-                        message.warning('Chỉ được chọn tối đa 10 sản phẩm')
-                        return
-                      }
-                      const ids = items.slice(0, 10).map(i => i.id)
-                      selectAll(checked, ids)
-                    }}
-                    disabled={items.length > 10}
-                  />
-                  <span className="ml-2">Chọn tất cả</span>
-                  {isSelectAllDisabled && (
-                    <span className="ml-2 text-gray-500 text-sm">(Tối đa 10)</span>
-                  )}
-                </div>
-
                 {/* Cart Items List */}
                 <div className="max-h-60 overflow-y-auto space-y-2 pr-2">
-                  {items.length === 0 ? (
-                    <div className="text-center py-4 text-gray-500">Giỏ hàng trống</div>
+                  {selectedCartItems.length === 0 ? (
+                    <div className="text-center py-4 text-gray-500">Chưa có sản phẩm nào được chọn</div>
                   ) : (
-                    items.slice(0, 10).map((item) => (
+                    selectedCartItems.map((item) => (
                       <SimpleCartItem
                         key={item.id}
                         item={item}
@@ -579,18 +596,28 @@ const OrderForm: React.FC = () => {
                 </div>
 
                 {/* Summary */}
-                <div className="space-y-2 pt-4 border-t">
+                <div className="space-y-2 pt-4 border-t border-gray-200">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Số lượng sản phẩm:</span>
+                    <span className="font-medium text-gray-900">{selectedCartItems.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Tổng số lượng:</span>
+                    <span className="font-medium text-gray-900">
+                      {selectedCartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                    </span>
+                  </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Tạm tính:</span>
-                    <span className="font-medium">{formatVND(temporaryTotal)}</span>
+                    <span className="font-medium text-gray-900">{formatVND(temporaryTotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Phí vận chuyển:</span>
-                    <span className="font-medium">{formatVND(currentShippingFee)}</span>
+                    <span className="font-medium text-gray-900">{formatVND(currentShippingFee)}</span>
                   </div>
-                  <div className="flex justify-between items-center pt-2 border-t">
-                    <span className="font-bold">Tổng cộng:</span>
-                    <span className="text-xl text-blue-600 font-bold">
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                    <span className="font-bold text-gray-900">Tổng cộng:</span>
+                    <span className="text-xl text-gray-900 font-bold">
                       {formatVND(finalTotal)}
                     </span>
                   </div>
@@ -604,13 +631,13 @@ const OrderForm: React.FC = () => {
                   onClick={handlePlaceOrder}
                   loading={isCreatingOrder}
                   disabled={!selectedShippingAddressId || !paymentMethod || shippingFee === null || selectedItems.size === 0 || !currentUser}
-                  className="mt-4"
+                  className="mt-4 bg-gray-800 hover:bg-gray-900 border-none"
                 >
-                  {`Đặt hàng (${selectedItems.size})`}
+                  {`Đặt hàng (${selectedItems.size} sản phẩm)`}
                 </Button>
                 
                 {!currentUser && (
-                  <div className="text-center text-red-500 text-sm mt-2">
+                  <div className="text-center text-red-600 text-sm mt-2">
                     Vui lòng đăng nhập để đặt hàng
                   </div>
                 )}

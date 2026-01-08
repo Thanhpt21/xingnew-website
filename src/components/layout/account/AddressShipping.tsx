@@ -350,7 +350,7 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
       <div className="w-full py-8">
         <div className="space-y-4">
           {[1, 2].map(i => (
-            <div key={i} className="h-24 bg-gray-100 rounded"></div>
+            <div key={i} className="h-24 bg-gray-100 rounded border border-gray-200"></div>
           ))}
         </div>
       </div>
@@ -360,8 +360,8 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
   if (isError) {
     return (
       <div className="w-full py-8">
-        <div className="text-center p-4 bg-red-50">
-          <div className="text-red-600 font-medium mb-2">Lỗi tải dữ liệu</div>
+        <div className="text-center p-6 bg-gray-50 border border-gray-300 rounded">
+          <div className="text-gray-800 font-medium mb-2">Lỗi tải dữ liệu</div>
           <p className="text-gray-600">Không thể tải địa chỉ. Vui lòng thử lại.</p>
         </div>
       </div>
@@ -385,10 +385,10 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
           <button
             onClick={() => isAddButtonDisabled ? null : openAddModal()}
             disabled={isAddButtonDisabled}
-            className={`px-4 py-2 rounded font-medium ${
+            className={`px-4 py-2 rounded font-medium transition-colors ${
               isAddButtonDisabled
                 ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-800 text-white hover:bg-gray-900"
             }`}
           >
             + Thêm địa chỉ mới
@@ -396,7 +396,7 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
           
           <button
             onClick={handleBackToOrder}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded font-medium hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded font-medium hover:bg-gray-50 transition-colors"
           >
             Quay lại trang đặt hàng
           </button>
@@ -406,19 +406,19 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
       {/* Address List */}
       <div className="space-y-3">
         {shippingAddresses.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 border">
-            <p className="text-gray-500 font-medium mb-2">Chưa có địa chỉ nào</p>
-            <p className="text-gray-400 mb-4">Thêm địa chỉ để mua sắm dễ dàng hơn</p>
+          <div className="text-center py-10 bg-gray-50 border border-gray-300 rounded">
+            <p className="text-gray-800 font-medium mb-2">Chưa có địa chỉ nào</p>
+            <p className="text-gray-600 mb-6">Thêm địa chỉ để mua sắm dễ dàng hơn</p>
             <div className="flex flex-wrap gap-2 justify-center">
               <button
                 onClick={openAddModal}
-                className="px-4 py-2 bg-blue-600 text-white font-medium rounded hover:bg-blue-700"
+                className="px-5 py-2.5 bg-gray-800 text-white font-medium rounded hover:bg-gray-900 transition-colors"
               >
                 Thêm địa chỉ đầu tiên
               </button>
               <button
                 onClick={handleBackToOrder}
-                className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-50"
+                className="px-5 py-2.5 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-50 transition-colors"
               >
                 Quay lại đặt hàng
               </button>
@@ -428,35 +428,35 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
           shippingAddresses.map((address: ShippingAddress) => (
             <div
               key={address.id}
-              className={`bg-white p-4 border ${
-                address.is_default ? "border-blue-500" : "border-gray-200"
+              className={`bg-white p-4 border rounded ${
+                address.is_default ? "border-gray-800" : "border-gray-300"
               }`}
             >
               <div className="md:flex md:items-start gap-4">
                 <div className="flex-1">
-                  <div className="mb-2">
+                  <div className="mb-3">
                     <span className="font-medium text-gray-900">
                       {address.name}
                     </span>
-                    <span className="text-gray-600 ml-2">
+                    <span className="text-gray-600 ml-3">
                       {address.phone}
                     </span>
                     {address.is_default && (
-                      <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                      <span className="ml-3 px-2.5 py-1 bg-gray-800 text-white text-xs rounded">
                         Mặc định
                       </span>
                     )}
                   </div>
 
-                  <p className="text-gray-600 mb-2">
+                  <p className="text-gray-700 mb-3">
                     {address.address}, {address.ward_name || address.ward},{" "}
                     {address.district_name || address.district},{" "}
                     {address.province_name || address.province}
                   </p>
 
                   {address.note && (
-                    <p className="text-sm text-gray-500">
-                      Ghi chú: {address.note}
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Ghi chú:</span> {address.note}
                     </p>
                   )}
                 </div>
@@ -466,17 +466,17 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                   <button
                     onClick={() => handleSetDefault(address.id)}
                     disabled={address.is_default}
-                    className={`px-3 py-1 rounded text-sm ${
+                    className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                       address.is_default
-                        ? "bg-blue-600 text-white"
-                        : "border border-gray-300 hover:border-blue-500 hover:text-blue-600"
+                        ? "bg-gray-800 text-white"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
                     }`}
                   >
                     {address.is_default ? "Đang dùng" : "Đặt mặc định"}
                   </button>
                   <button
                     onClick={() => handleDelete(address.id)}
-                    className="px-3 py-1 border border-red-300 text-red-600 rounded text-sm hover:bg-red-50"
+                    className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-colors"
                   >
                     Xóa
                   </button>
@@ -490,16 +490,24 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
       {/* Modal */}
       {isModalOpen && formValues && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white border border-gray-300 rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
             {/* Header */}
-            <div className="border-b p-4">
-              <h3 className="font-semibold text-gray-900">
-                {editingAddress ? "Chỉnh sửa địa chỉ" : "Thêm địa chỉ mới"}
-              </h3>
+            <div className="border-b border-gray-300 p-5">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-gray-900 text-lg">
+                  {editingAddress ? "Chỉnh sửa địa chỉ" : "Thêm địa chỉ mới"}
+                </h3>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-700 text-xl"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* Content */}
-            <div className="p-4 space-y-4">
+            <div className="p-5 space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -510,7 +518,7 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                     value={formValues.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     placeholder="Nguyễn Văn A"
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                   />
                 </div>
                 <div>
@@ -522,7 +530,7 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                     value={formValues.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
                     placeholder="0901234567"
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                   />
                 </div>
               </div>
@@ -535,7 +543,7 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                   <select
                     value={selectedProvince}
                     onChange={(e) => handleProvinceChange(e.target.value)}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                   >
                     <option value="">Chọn tỉnh/thành</option>
                     {provinces.map((p) => (
@@ -552,8 +560,8 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                     value={selectedDistrict}
                     onChange={(e) => handleDistrictChange(e.target.value)}
                     disabled={!selectedProvince}
-                    className={`w-full px-3 py-2 border rounded ${
-                      !selectedProvince ? "bg-gray-100 text-gray-400" : ""
+                    className={`w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 ${
+                      !selectedProvince ? "bg-gray-100 text-gray-500" : ""
                     }`}
                   >
                     <option value="">Chọn quận/huyện</option>
@@ -571,8 +579,8 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                     value={selectedWard}
                     onChange={(e) => handleWardChange(e.target.value)}
                     disabled={!selectedDistrict}
-                    className={`w-full px-3 py-2 border rounded ${
-                      !selectedDistrict ? "bg-gray-100 text-gray-400" : ""
+                    className={`w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 ${
+                      !selectedDistrict ? "bg-gray-100 text-gray-500" : ""
                     }`}
                   >
                     <option value="">Chọn phường/xã</option>
@@ -592,7 +600,7 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                   onChange={(e) => handleInputChange("address", e.target.value)}
                   placeholder="Số nhà, tên đường, khu vực..."
                   rows={3}
-                  className="w-full px-3 py-2 border rounded resize-none"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded resize-none focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                 />
               </div>
 
@@ -605,23 +613,23 @@ const AddressShipping: React.FC<{ userId: number | string }> = ({ userId }) => {
                   onChange={(e) => handleInputChange("note", e.target.value)}
                   placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..."
                   rows={2}
-                  className="w-full px-3 py-2 border rounded resize-none"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded resize-none focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
                 />
               </div>
             </div>
 
             {/* Footer */}
-            <div className="border-t p-4">
-              <div className="flex justify-end gap-2">
+            <div className="border-t border-gray-300 p-5">
+              <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded font-medium hover:bg-gray-50"
+                  className="px-5 py-2.5 border border-gray-300 text-gray-700 rounded font-medium hover:bg-gray-50 transition-colors"
                 >
                   Hủy
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className="px-4 py-2 bg-blue-600 text-white rounded font-medium hover:bg-blue-700"
+                  className="px-5 py-2.5 bg-gray-800 text-white rounded font-medium hover:bg-gray-900 transition-colors"
                 >
                   Lưu địa chỉ
                 </button>

@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Suspense } from "react";
 
 import { useBlogBySlug } from "@/hooks/blog/useBlogBySlug";
@@ -34,7 +35,7 @@ const EyeIcon = () => (
 function BlogLoading() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto">
         {/* Breadcrumb Skeleton */}
         <div className="mb-8">
           <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
@@ -260,34 +261,34 @@ function BlogContent({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
-        <nav className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Link
-              href="/"
-              className="flex items-center gap-2 hover:text-gray-900 transition-colors"
-            >
-              <HomeIcon />
-              <span>Trang chủ</span>
-            </Link>
-            <span className="text-gray-400">/</span>
-            <Link
-              href="/tin-tuc"
-              className="hover:text-gray-900 transition-colors"
-            >
-              Tin tức
-            </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-900 font-medium truncate">
-              {blog.title}
-            </span>
+       <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+        >
+          <div className="max-w-7xl mx-auto py-4">
+            <div className="flex items-center gap-2 text-sm">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                Trang chủ
+              </Link>
+              <span className="text-gray-400">/</span>
+              <Link href="/tin-tuc" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                Tin tức
+              </Link>
+              <span className="text-gray-400">/</span>
+              <span className="text-gray-800 font-semibold truncate" title={blog.title}>
+                {blog.title}
+              </span>
+            </div>
           </div>
-        </nav>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
-          <article className="flex-1 lg:max-w-3xl">
+          <article className="flex-1 lg:max-w-3xl py-8">
             {/* Article Header */}
             <div className="mb-8">
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">
@@ -378,7 +379,7 @@ function BlogContent({ slug }: { slug: string }) {
 
           {/* Sidebar - Related Blogs */}
           <aside className="lg:w-96">
-            <div className="sticky top-8">
+            <div className="sticky top-8 py-8">
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900">
                   Bài viết liên quan

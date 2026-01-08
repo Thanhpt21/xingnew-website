@@ -6,7 +6,7 @@ import OrderForm from "@/components/layout/checkout/OrderForm";
 
 function OrderPage() {
   return (
-    <div className="container mx-auto md:p-8 lg:p-12">
+    <div className="container mx-auto">
       <OrderForm />
     </div>
   );

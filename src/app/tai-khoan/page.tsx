@@ -9,6 +9,7 @@ import PurchaseHistory from '@/components/layout/account/PurchaseHistory';
 import AddressShipping from '@/components/layout/account/AddressShipping';
 import { useAuth } from '@/context/AuthContext';
 import { HomeOutlined } from '@ant-design/icons';
+import { motion } from "framer-motion";
 import Link from 'next/link';
 
 type AccountMenuKey = 'personal' | 'address' | 'history';
@@ -41,7 +42,7 @@ const AccountPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-800 border-t-transparent mb-4"></div>
           <p className="text-gray-600 font-medium">Đang tải thông tin người dùng...</p>
         </div>
       </div>
@@ -52,8 +53,8 @@ const AccountPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
@@ -65,38 +66,46 @@ const AccountPage = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 md:py-12 w-full">
+    <div className="">
       <div className="container mx-auto max-w-7xl px-2 md:px-4">
         {/* Breadcrumb */}
-        <div className="mb-8 flex items-center gap-2 text-gray-600 px-2 md:px-0">
-          <Link href="/" className="flex items-center gap-1 hover:text-blue-600 transition-colors">
-            <HomeOutlined />
-            <span>Trang chủ</span>
-          </Link>
-          <span>/</span>
-          <Link href="/tai-khoan" className="text-gray-900 font-medium hover:text-blue-600">
-            Tài khoản
-          </Link>
-          {selectedMenu !== 'personal' && (
-            <>
-              <span>/</span>
-              <span className="text-blue-600 font-medium">
-                {selectedMenu === 'address' && 'Địa chỉ giao hàng'}
-                {selectedMenu === 'history' && 'Lịch sử mua hàng'}
-              </span>
-            </>
-          )}
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+        >
+          <div className="max-w-7xl mx-auto py-4">
+            <div className="flex items-center gap-2 text-sm">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                Trang chủ
+              </Link>
+              <span className="text-gray-400">/</span>
+              <Link href="/tai-khoan" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                Tài khoản
+              </Link>
+              {selectedMenu !== 'personal' && (
+                <>
+                  <span className="text-gray-400">/</span>
+                  <span className="text-gray-800 font-semibold">
+                    {selectedMenu === 'address' && 'Địa chỉ giao hàng'}
+                    {selectedMenu === 'history' && 'Lịch sử mua hàng'}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-2 md:px-0">
           {/* Sidebar */}
           <div className="lg:col-span-3">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {/* User Info Header */}
-              <div className="p-6 bg-gradient-to-br from-blue-600 to-blue-700">
+              <div className="p-6 bg-gradient-to-br from-gray-800 to-gray-900">
                 <div className="flex items-center space-x-4">
                   <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-2xl font-bold text-blue-600">
+                    <span className="text-2xl font-bold text-gray-800">
                       {currentUser?.name?.charAt(0)?.toUpperCase() || 'U'}
                     </span>
                   </div>
@@ -104,7 +113,7 @@ const AccountPage = () => {
                     <h3 className="text-white font-semibold text-lg truncate">
                       {currentUser?.name || 'Người dùng'}
                     </h3>
-                    <p className="text-blue-100 text-sm">
+                    <p className="text-gray-300 text-sm">
                       {currentUser?.email}
                     </p>
                   </div>
@@ -126,9 +135,9 @@ const AccountPage = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2 md:p-6 min-h-[600px]">
               {/* Welcome Message */}
               {selectedMenu === 'personal' && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                   <p className="text-gray-700">
-                    Xin chào <span className="font-semibold text-blue-700">{currentUser?.name || 'Người dùng'}</span>
+                    Xin chào <span className="font-semibold text-gray-900">{currentUser?.name || 'Người dùng'}</span>
                   </p>
                   <p className="text-sm text-gray-600 mt-1">
                     Từ trang quản lý tài khoản, bạn có thể xem đơn hàng gần đây, quản lý địa chỉ giao hàng và thanh toán, 

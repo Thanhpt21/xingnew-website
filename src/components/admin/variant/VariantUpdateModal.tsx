@@ -46,15 +46,14 @@ export const VariantUpdateModal = ({ open, onClose, variant, refetch }: VariantU
     attributeValuesMap[val.attributeId].push(val)
   })
 
-
   useEffect(() => {
     if (variant && open) {
       form.setFieldsValue({
         sku: variant.sku,
         barcode: variant.barcode ?? '',
         priceDelta: variant.priceDelta ?? 0,
+        stock: variant.stock ?? 0, // Thêm stock
       })
-
 
       if (variant.attrValues) {
         const selected: Record<number, number> = {}
@@ -85,43 +84,45 @@ export const VariantUpdateModal = ({ open, onClose, variant, refetch }: VariantU
     }
   }, [variant, open])
 
-const onFinish = async (values: any) => {
-  if (!variant) return
-  try {
-    // Lọc chỉ attributeId hiện có của product
-    const newAttrValues: Record<number, number> = {}
-    for (const pa of productAttributes) {
-      const selectedValue = selectedAttrValues[pa.attributeId]
-      if (!selectedValue) {
-        message.error('Vui lòng chọn đầy đủ giá trị cho tất cả thuộc tính')
-        return
+  const onFinish = async (values: any) => {
+    if (!variant) return
+    try {
+      // Lọc chỉ attributeId hiện có của product
+      const newAttrValues: Record<number, number> = {}
+      for (const pa of productAttributes) {
+        const selectedValue = selectedAttrValues[pa.attributeId]
+        if (!selectedValue) {
+          message.error('Vui lòng chọn đầy đủ giá trị cho tất cả thuộc tính')
+          return
+        }
+        newAttrValues[pa.attributeId] = selectedValue
       }
-      newAttrValues[pa.attributeId] = selectedValue
+
+      const formData = new FormData()
+      formData.append('sku', values.sku)
+      formData.append('barcode', values.barcode || '')
+      formData.append('priceDelta', String(values.priceDelta ?? 0))
+      formData.append('stock', String(values.stock ?? 0)) // Thêm stock
+      formData.append('attrValues', JSON.stringify(newAttrValues))
+
+      if (thumbFile[0]?.originFileObj) {
+        formData.append('thumb', thumbFile[0].originFileObj)
+      }
+
+      await mutateAsync({ id: variant.id, formData })
+
+      message.success('Cập nhật biến thể thành công')
+      form.resetFields()
+      setThumbFile([])
+      setSelectedAttrValues({})
+      onClose()
+      refetch?.()
+    } catch (err: any) {
+      console.error('❌ Update variant error:', err)
+      message.error(err?.response?.data?.message || 'Lỗi cập nhật biến thể')
     }
-
-    const formData = new FormData()
-    formData.append('sku', values.sku)
-    formData.append('barcode', values.barcode || '')
-    formData.append('priceDelta', String(values.priceDelta ?? 0))
-    formData.append('attrValues', JSON.stringify(newAttrValues))
-
-    if (thumbFile[0]?.originFileObj) {
-      formData.append('thumb', thumbFile[0].originFileObj)
-    }
-
-    await mutateAsync({ id: variant.id, formData })
-
-    message.success('Cập nhật biến thể thành công')
-    form.resetFields()
-    setThumbFile([])
-    setSelectedAttrValues({})
-    onClose()
-    refetch?.()
-  } catch (err: any) {
-    console.error('❌ Update variant error:', err)
-    message.error(err?.response?.data?.message || 'Lỗi cập nhật biến thể')
   }
-}
+
   if ((loadingAttrs || !allAttributes || !allAttrValuesResponse) && open) return <Spin />
 
   return (
@@ -147,14 +148,34 @@ const onFinish = async (values: any) => {
           </Col>
         </Row>
 
-        <Form.Item
-          label="Giá biến thể"
-          name="priceDelta"
-          tooltip="Giá của sản phẩm."
-          initialValue={0}
-        >
-          <InputNumber min={0} style={{ width: '100%' }} />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label="Chênh lệch giá"
+              name="priceDelta"
+              tooltip="Giá chênh lệch so với sản phẩm gốc"
+              rules={[{ required: true, message: 'Vui lòng nhập giá' }]}
+            >
+              <InputNumber 
+                min={-10000000} 
+                style={{ width: '100%' }} 
+                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Tồn kho"
+              name="stock"
+              rules={[{ required: true, message: 'Vui lòng nhập tồn kho' }]}
+            >
+              <InputNumber 
+                min={0} 
+                style={{ width: '100%' }} 
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
         {/* ✅ Radio group cho từng attribute */}
         {productAttributes.map((pa) => {

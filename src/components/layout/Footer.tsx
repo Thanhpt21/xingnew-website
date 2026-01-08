@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  YoutubeFilled,
-  FacebookFilled,
-  EnvironmentOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  MessageOutlined,
-} from "@ant-design/icons";
+import { 
+  Youtube, 
+  Facebook, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  MessageCircle,
+  Instagram 
+} from "lucide-react";
 
 interface FooterProps {
   config: any;
@@ -27,7 +28,7 @@ export default function Footer({ config }: FooterProps) {
           {/* ===== COLUMN 1: LOGO & DESCRIPTION ===== */}
           <div className="space-y-6">
             {config.logo && (
-              <div className="w-56 md:w-64">
+              <div className="w-80 md:w-200">
                 <Image
                   src={config.logo}
                   alt={config.name || "Xing New"}
@@ -55,7 +56,7 @@ export default function Footer({ config }: FooterProps) {
                   target="_blank"
                   className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 transition-all duration-300 group border border-gray-300"
                 >
-                  <YoutubeFilled className="text-2xl text-gray-900 group-hover:text-red-600" />
+                  <Youtube className="w-6 h-6 text-gray-900 group-hover:text-red-600" />
                 </Link>
               )}
 
@@ -65,7 +66,7 @@ export default function Footer({ config }: FooterProps) {
                   target="_blank"
                   className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 transition-all duration-300 group border border-gray-300"
                 >
-                  <FacebookFilled className="text-2xl text-gray-900 group-hover:text-blue-600" />
+                  <Facebook className="w-6 h-6 text-gray-900 group-hover:text-blue-600" />
                 </Link>
               )}
             </div>
@@ -80,7 +81,7 @@ export default function Footer({ config }: FooterProps) {
             <div className="space-y-4">
               {(config.showAddress ?? true) && (
                 <div className="flex items-start gap-4">
-                  <EnvironmentOutlined className="text-gray-800 text-lg mt-0.5 flex-shrink-0 font-semibold" />
+                  <MapPin className="w-5 h-5 text-gray-800 mt-0.5 flex-shrink-0" />
                   <span className="text-gray-800 font-medium">
                     {config.address || "269/20 Lý Thường Kiệt, Phường Phú Thọ, TP. Thủ Dầu Một, Bình Dương"}
                   </span>
@@ -89,7 +90,7 @@ export default function Footer({ config }: FooterProps) {
 
               {(config.showEmail ?? true) && (
                 <div className="flex items-center gap-4">
-                  <MailOutlined className="text-gray-800 text-lg flex-shrink-0 font-semibold" />
+                  <Mail className="w-5 h-5 text-gray-800 flex-shrink-0" />
                   <a href={`mailto:${config.email}`} className="text-gray-800 font-medium hover:text-gray-900 transition-colors">
                     {config.email || "contact@xingnew.vn"}
                   </a>
@@ -98,7 +99,7 @@ export default function Footer({ config }: FooterProps) {
 
               {(config.showMobile ?? true) && (
                 <div className="flex items-center gap-4">
-                  <PhoneOutlined className="text-gray-800 text-lg flex-shrink-0 font-semibold" />
+                  <Phone className="w-5 h-5 text-gray-800 flex-shrink-0" />
                   <a href={`tel:${config.mobile}`} className="text-gray-900 font-bold hover:text-gray-700 transition-colors">
                     {config.mobile || "0903 776 456"}
                   </a>
@@ -106,9 +107,9 @@ export default function Footer({ config }: FooterProps) {
               )}
 
               <div className="flex items-center gap-4">
-                <MessageOutlined className="text-gray-800 text-lg flex-shrink-0 font-semibold" />
+                <MessageCircle className="w-5 h-5 text-gray-800 flex-shrink-0" />
                 <span className="text-gray-800 font-medium">
-                  Zalo OA: <strong className="text-gray-900">XingNew</strong>
+                  Zalo: <strong className="text-gray-900">(XingNew) {config.mobile || "0903 776 456"}</strong>
                 </span>
               </div>
 
@@ -139,20 +140,11 @@ export default function Footer({ config }: FooterProps) {
               <Link href="/lien-he" className="text-gray-800 font-medium hover:text-gray-900 transition-colors hover:underline">
                 Liên hệ
               </Link>
-              <Link href="/chinh-sach-doi-tra" className="text-gray-800 font-medium hover:text-gray-900 transition-colors hover:underline">
-                Chính sách đổi trả
-              </Link>
-              <Link href="/chinh-sach-bao-mat" className="text-gray-800 font-medium hover:text-gray-900 transition-colors hover:underline">
-                Bảo mật thông tin
-              </Link>
             </div>
 
             <div className="pt-6 border-t border-gray-300">
               <p className="text-sm text-gray-800 font-medium">
                 <strong className="text-gray-900 font-bold">Giờ làm việc:</strong> Thứ 2 - Thứ 7: 8:00 - 17:30
-              </p>
-              <p className="text-sm text-gray-800 font-medium mt-2">
-                Chủ nhật & Lễ: Nghỉ
               </p>
             </div>
           </div>
@@ -167,16 +159,56 @@ export default function Footer({ config }: FooterProps) {
               © {new Date().getFullYear()} {config.name || "Xing New"}. Tất cả quyền được bảo lưu.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-6">
-              <Link href="/dieu-khoan-dich-vu" className="text-gray-800 font-medium hover:text-gray-900 transition-colors hover:underline">
-                Điều khoản dịch vụ
-              </Link>
-              <Link href="/chinh-sach-bao-mat" className="text-gray-800 font-medium hover:text-gray-900 transition-colors hover:underline">
-                Chính sách bảo mật
-              </Link>
-              <Link href="/chinh-sach-doi-tra" className="text-gray-800 font-medium hover:text-gray-900 transition-colors hover:underline">
-                Chính sách đổi trả
-              </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              {/* Facebook */}
+              {config.facebook && (
+                <Link
+                  href={config.facebook}
+                  target="_blank"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white hover:bg-gray-200 transition"
+                >
+                  <Facebook className="w-5 h-5 text-blue-600" />
+                </Link>
+              )}
+
+              {/* TikTok */}
+              {config.tiktok && (
+                <Link
+                  href={config.tiktok}
+                  target="_blank"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white hover:bg-gray-200 transition"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-5 h-5 text-black"
+                  >
+                    <path d="M21 8.5c-1.5 0-3-.5-4.2-1.4v7.3c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6c.4 0 .8 0 1.2.1v3.1c-.4-.1-.8-.2-1.2-.2-1.6 0-2.9 1.3-2.9 2.9s1.3 2.9 2.9 2.9 3-1.3 3-2.9V2h3.2c.3 2.3 2.2 4.1 4.6 4.3v2.2z" />
+                  </svg>
+                </Link>
+              )}
+
+              {/* Instagram */}
+              {config.instagram && (
+                <Link
+                  href={config.instagram}
+                  target="_blank"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white hover:bg-gray-200 transition"
+                >
+                  <Instagram className="w-5 h-5 text-pink-600" />
+                </Link>
+              )}
+
+              {/* YouTube */}
+              {config.youtube && (
+                <Link
+                  href={config.youtube}
+                  target="_blank"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white hover:bg-gray-200 transition"
+                >
+                  <Youtube className="w-5 h-5 text-red-600" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

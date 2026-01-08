@@ -1,7 +1,7 @@
 'use client'
 
-import { Table, Space, Tooltip, Input, Button, Modal, message, Image } from 'antd'
-import { EditOutlined, DeleteOutlined, PictureOutlined, SearchOutlined, InboxOutlined } from '@ant-design/icons'
+import { Table, Space, Tooltip, Input, Button, Modal, message, Image, Tag } from 'antd'
+import { EditOutlined, DeleteOutlined, PictureOutlined, SearchOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import { useState } from 'react'
 
@@ -11,7 +11,6 @@ import { ProductVariant } from '@/types/product-variant.type'
 import { formatVND } from '@/utils/helpers'
 import { useProductVariants } from '@/hooks/product-variant/useProductVariants'
 import { useDeleteProductVariant } from '@/hooks/product-variant/useDeleteProductVariant'
-import { InventoryModal } from '../inventory/InventoryModal'
 import { getImageUrl } from '@/utils/getImageUrl'
 import { useAllAttributes } from '@/hooks/attribute/useAllAttributes'
 import { useAttributeValues } from '@/hooks/attribute-value/useAttributeValues'
@@ -27,35 +26,34 @@ export default function VariantTable({ productId }: Props) {
   const [openCreate, setOpenCreate] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
-  const [openInventory, setOpenInventory] = useState(false)
 
   // Nếu productId chưa có thì không fetch
   const { data, isLoading, refetch } = useProductVariants(productId)
   const { mutateAsync: deleteVariant } = useDeleteProductVariant()
 
   const { data: allAttributes } = useAllAttributes()
- const { data: allAttrValuesResponse } = useAttributeValues()
+  const { data: allAttrValuesResponse } = useAttributeValues()
   const allAttrValues = allAttrValuesResponse?.data || []
 
-    const resolveAttrDisplay = (attrValues: Record<string, any>) => {
-      if (!attrValues || !allAttributes || !allAttrValues) return ''
-      
-      const display: string[] = []
+  const resolveAttrDisplay = (attrValues: Record<string, any>) => {
+    if (!attrValues || !allAttributes || !allAttrValues) return ''
+    
+    const display: string[] = []
 
-      for (const [attrIdStr, valueIdStr] of Object.entries(attrValues)) {
-        const attrId = Number(attrIdStr)
-        const valueId = Number(valueIdStr)
+    for (const [attrIdStr, valueIdStr] of Object.entries(attrValues)) {
+      const attrId = Number(attrIdStr)
+      const valueId = Number(valueIdStr)
 
-        const attr = allAttributes.find((a: any) => a.id === attrId)
-        const val = allAttrValues.find((v: any) => v.id === valueId)
+      const attr = allAttributes.find((a: any) => a.id === attrId)
+      const val = allAttrValues.find((v: any) => v.id === valueId)
 
-        if (attr && val) {
-          display.push(`${attr.name}: ${val.value}`)
-        }
+      if (attr && val) {
+        display.push(`${attr.name}: ${val.value}`)
       }
-
-      return display.join(', ')
     }
+
+    return display.join(', ')
+  }
 
   const columns: ColumnsType<ProductVariant> = [
     {
@@ -101,6 +99,28 @@ export default function VariantTable({ productId }: Props) {
       render: (record: ProductVariant) => <span>{formatVND(record.price ?? record.priceDelta)}</span>,
     },
     {
+      title: 'Tồn kho',
+      key: 'stock',
+      align: 'center',
+      width: 100,
+      render: (record: ProductVariant) => {
+        let color = 'default'
+        if (record.stock === 0) {
+          color = 'error'
+        } else if (record.stock < 10) {
+          color = 'warning'
+        } else {
+          color = 'success'
+        }
+        
+        return (
+          <Tag color={color} style={{ minWidth: '60px', textAlign: 'center' }}>
+            {record.stock}
+          </Tag>
+        )
+      },
+    },
+    {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -112,15 +132,6 @@ export default function VariantTable({ productId }: Props) {
       width: 120,
       render: (_text, record) => (
         <Space size="middle">
-           <Tooltip title="Quản lý tồn kho">
-            <InboxOutlined
-              style={{ color: '#52c41a', cursor: 'pointer', fontSize: 16 }}
-              onClick={() => {
-                setSelectedVariant(record)
-                setOpenInventory(true)
-              }}
-            />
-          </Tooltip>
           <Tooltip title="Chỉnh sửa">
             <EditOutlined
               style={{ color: '#1890ff', cursor: 'pointer' }}
@@ -203,15 +214,6 @@ export default function VariantTable({ productId }: Props) {
         variant={selectedVariant}
         refetch={refetch}
       />
-
-       {selectedVariant && (
-        <InventoryModal
-          open={openInventory}
-          onClose={() => setOpenInventory(false)}
-          productVariantId={selectedVariant.id}
-          variantName={`SKU: ${selectedVariant.sku}`}
-        />
-      )}
     </div>
   )
 }

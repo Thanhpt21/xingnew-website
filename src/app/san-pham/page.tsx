@@ -118,7 +118,7 @@ export default function ProductsPage() {
   const [showFeatured, setShowFeatured] = useState<boolean>(getCurrentParams().isFeatured);
   const [showPromoted, setShowPromoted] = useState<boolean>(getCurrentParams().hasPromotion);
   const [currentPage, setCurrentPage] = useState(getCurrentParams().page);
-  const PRODUCTS_PER_PAGE = 12;
+  const PRODUCTS_PER_PAGE = 20;
 
   const debouncedSearch = useDebounce(getCurrentParams().search, 300);
 
@@ -625,7 +625,7 @@ export default function ProductsPage() {
   // Loading state toàn trang
   if (isProductsLoading && currentPage === 1) {
     return (
-      <div className="min-h-screen bg-white w-full">
+      <div className="bg-white w-full">
         <ProductBreadcrumb
           searchTerm={getCurrentParams().search || undefined}
           selectedCategoryName={selectedCategoryName || undefined}
@@ -653,7 +653,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white w-full">
+    <div className="bg-white w-full">
       {showLightLoading && (
         <div className="fixed inset-0 z-[9999] pointer-events-none">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

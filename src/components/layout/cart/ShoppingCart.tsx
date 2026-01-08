@@ -4,6 +4,7 @@ import { Table, Button, InputNumber, Image, Modal, message, Checkbox, Empty, Car
 import { DeleteOutlined, HomeOutlined, MinusOutlined, PlusOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@/context/AuthContext';
@@ -139,14 +140,24 @@ const ShoppingCart = () => {
   // Giỏ hàng trống
   if (!items || items.length === 0) {
     return (
-      <div className="min-h-screen py-8">
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-6">
-            <Link href="/" className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors">
-              <HomeOutlined />
-              <span>Trang chủ</span>
-            </Link>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+          >
+            <div className="max-w-7xl mx-auto py-4">
+              <div className="flex items-center gap-2 text-sm">
+                <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
+                  Trang chủ
+                </Link>
+                <span className="text-gray-400">/</span>
+                <span className="text-gray-800 font-semibold">Giỏ hàng</span>
+              </div>
+            </div>
+          </motion.div>
 
           <Card className="border border-gray-200">
             <Empty
@@ -291,21 +302,26 @@ const ShoppingCart = () => {
   ];
 
   return (
-    <div className="py-6">
+    <div className="">
       {/* Breadcrumb */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto pb-6 px-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="border-b border-gray-200 bg-white/80 backdrop-blur-sm"
+      >
+        <div className="max-w-7xl mx-auto py-4">
           <div className="flex items-center gap-2 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900 font-medium">
+            <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hover:underline">
               Trang chủ
-            </a>
+            </Link>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-900">Giỏ hàng</span>
+            <span className="text-gray-800 font-semibold">Giỏ hàng</span>
           </div>
         </div>
-      </div>
+      </motion.div>
       
-      <div className="container mx-auto max-w-7xl px-4">
+      <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <div className="my-2">
           <div className="flex items-center justify-between mb-2">

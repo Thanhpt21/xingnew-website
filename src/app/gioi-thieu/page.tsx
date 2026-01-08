@@ -173,7 +173,7 @@ export default function CompanyHistoryPage() {
       </motion.div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto md:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto py-8">
         {/* Timeline Section */}
         <motion.div
           initial={{ opacity: 0 }}

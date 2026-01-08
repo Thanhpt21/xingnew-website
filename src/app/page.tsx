@@ -15,9 +15,9 @@ export default function Page() {
     <main className="flex flex-col bg-gray-50">
       <Banner />
       <HomeCategorySections />
-      <HomeFeatures />
       <ProductList />
       <BlogHome />
+      <HomeFeatures />
     </main>
   )
 }

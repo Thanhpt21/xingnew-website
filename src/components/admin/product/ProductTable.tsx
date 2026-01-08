@@ -103,12 +103,12 @@ export default function ProductTable() {
       width: 140,
       render: (_, record) => (
         <Space size="middle">
-            {/* <Tooltip title="Quản lý biến thể">
+            <Tooltip title="Quản lý biến thể">
             <SkinOutlined
               style={{ color: '#fa8c16', cursor: 'pointer', fontSize: 16 }}
               onClick={() => router.push(`/admin/variant/${record.id}`)} // dynamic route
             />
-          </Tooltip>*/}
+          </Tooltip>
           <Tooltip title="Gán thuộc tính">
             <MedicineBoxOutlined
               style={{ color: '#52c41a', cursor: 'pointer' }}
